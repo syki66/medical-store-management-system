@@ -10,7 +10,7 @@ import Company from "../pages/Company/Company";
 import CompanyAccount from "../pages/CompanyAccount/CompanyAccount";
 import Employee from "../pages/Employee/Employee";
 import Medicine from "../pages/Medicine";
-import Bill from "../pages/Bill";
+import Bill from "../pages/Bill/Bill";
 import CustomerRequest from "../pages/CustomerRequest";
 
 
