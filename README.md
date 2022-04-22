@@ -1,1 +1,1 @@
-# landingProject
+# landingProject front-end

@@ -1,25 +1,24 @@
-<<<<<<< HEAD
-/Server/.env
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-*.log 
-*.pot 
-*.pyc 
-__pycache__/ 
-local_settings.py 
-db.sqlite3 
-db.sqlite3-journal 
-medias
-=======
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
 
-/Server/.env
+# testing
+/coverage
 
-*.log 
-*.pot 
-*.pyc 
-__pycache__/ 
-local_settings.py 
-db.sqlite3 
-db.sqlite3-journal 
+# production
+/build
 
-media
->>>>>>> 009c883cc7144d26a70ff60c2f28fee019b7ec0c
+# misc
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
