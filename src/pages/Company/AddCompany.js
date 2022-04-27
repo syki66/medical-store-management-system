@@ -1,6 +1,28 @@
-import React, {useEffect, useState} from 'react';
-import {Box, IconButton, Modal, Typography, TextField, Tooltip, Divider, Button, Select, FormControl, InputLabel, MenuItem} from "@mui/material";
+import React, { useState } from 'react';
+import {
+    IconButton,
+    TextField,
+    Tooltip,
+    Button,
+    Select,
+    FormControl,
+    InputLabel,
+    MenuItem,
+} from "@mui/material";
+
 import ClearIcon from "@mui/icons-material/Clear";
+import axios from "axios";
+
+import {
+    CloseButton,
+    StyledButton,
+    ModalContainer,
+    GridContainer,
+    GridDescription,
+    GridInnerTitle,
+    GridName,
+    GridContent,
+} from '../../styles/Modal';
 
 const generateDate = () => {
     let today = new Date();
@@ -11,13 +33,18 @@ const generateDate = () => {
     return (year + '-' + month + '-' + date);
 }
 
-export default function AddCompany({ bankList, closeModal }) {
+const URL = "http://localhost:8000/company/";
+
+const flexName = 4;
+const flexContent = 12 - flexName;
+
+export default function AddCompany({ bankList, closeModal, setSuccessOpen, setErrorOpen }) {
     const [select, setSelect] = useState("");
     const [inputs, setInputs] = useState({
         "com_uid": -1,
-        "com_joinDate": generateDate(),
-        "com_account_No": "",
-        "bank_name": "",
+        "com_joindate": generateDate(),
+        "com_account_no": "",
+        "bank_uid": "",
     });
 
     const handleSelect = (event) => {
@@ -25,85 +52,121 @@ export default function AddCompany({ bankList, closeModal }) {
         setSelect(value);
         setInputs({
             ...inputs,
-            [name]: bankList[value][value + 1]
-        })
+            [name]: value + 1
+        });
     };
 
     const handleChange = (event) => {
-        const { id, value } = event.target
+        const { id, value } = event.target;
         setInputs({
             ...inputs,
             [id]: value
-        })
+        });
     }
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
-        console.log(inputs);
-
-
-        // axios.post("http://local~~", inputs)
-        //     .then((res) => {
-        //         console.log(res);
-        //         closeModal();
-        //     })
+        try {
+            const res = await axios.post(URL, inputs);
+            if (res.request.status) {
+                closeModal();
+                setSuccessOpen(true);
+            } else {
+                console.log(res.request.status);
+                setErrorOpen(true);
+            }
+        } catch (error) {
+            console.log(error);
+            setErrorOpen(true);
+        }
     };
-
 
     return (
         <>
-            <div className="modalContainer">
-                <div className='closeButton'>
+            <ModalContainer>
+                <CloseButton>
                     <Tooltip title="Close">
                         <IconButton onClick={closeModal}>
                             <ClearIcon />
                         </IconButton>
                     </Tooltip>
-                </div>
+                </CloseButton>
                 <form onSubmit={handleSubmit}>
-                    <div className="modalInnerContainer">
-                        <div>
-                            <div>Name</div>
+                    <GridContainer container>
+                        <GridName item xs={flexName}>
+                            Name
+                        </GridName>
+                        <GridContent item xs={flexContent}>
                             <TextField
                                 id="com_name"
                                 required
                                 label="Required"
                                 size="small"
+                                fullWidth
                                 onChange={handleChange}
+                                inputProps={{ maxLength: 20 }}
                             />
-                            <div>License No.</div>
+                        </GridContent>
+                        <GridName item xs={flexName}>
+                            License No.
+                        </GridName>
+                        <GridContent item xs={flexContent}>
                             <TextField
                                 id="com_licence_no"
                                 required
                                 label="Required"
                                 size="small"
+                                fullWidth
                                 onChange={handleChange}
+                                inputProps={{ maxLength: 20 }}
                             />
-                            <div>Address</div>
+                        </GridContent>
+                        <GridName item xs={flexName}>
+                            Address
+                        </GridName>
+                        <GridContent item xs={flexContent}>
                             <TextField
                                 id="com_address"
                                 required
                                 label="Required"
                                 size="small"
+                                fullWidth
                                 onChange={handleChange}
+                                inputProps={{ maxLength: 50 }}
                             />
-                            <div>Contact No.</div>
+                        </GridContent>
+                        <GridName item xs={flexName}>
+                            Contact No.
+                        </GridName>
+                        <GridContent item xs={flexContent}>
                             <TextField
                                 id="com_contact_no"
                                 required
                                 label="Required"
                                 size="small"
+                                fullWidth
                                 onChange={handleChange}
+                                inputProps={{ maxLength: 15 }}
                             />
-                            <div>Email</div>
+                        </GridContent>
+                        <GridName item xs={flexName}>
+                            Email
+                        </GridName>
+                        <GridContent item xs={flexContent}>
                             <TextField
                                 id="com_email"
                                 required
                                 label="Required"
                                 size="small"
+                                fullWidth
                                 onChange={handleChange}
+                                inputProps={{ maxLength: 50 }}
                             />
-                            <div>Description</div>
+                        </GridContent>
+                        <GridName item xs={flexName}>
+                            Description
+                        </GridName>
+                        <GridContent item xs={flexContent}>
                             <TextField
                                 id="com_description"
                                 required
@@ -111,54 +174,69 @@ export default function AddCompany({ bankList, closeModal }) {
                                 rows={5}
                                 label="Required"
                                 size="small"
+                                fullWidth
                                 onChange={handleChange}
+                                inputProps={{ maxLength: 1000 }}
                             />
-                        </div>
-                        <div className="modalInnerTitle">
+                        </GridContent>
+
+                        <GridInnerTitle item xs={12}>
                             Company Bank
-                        </div>
-                        <div>
-                            <div>Account No.</div>
+                        </GridInnerTitle>
+
+                        <GridName item xs={flexName}>
+                            Account No.
+                        </GridName>
+                        <GridContent item xs={flexContent}>
                             <TextField
                                 id="com_account_no"
                                 size="small"
+                                required
+                                label="Required"
+                                fullWidth
                                 onChange={handleChange}
+                                inputProps={{ maxLength: 20 }}
                             />
-                            <div>Bank Name</div>
+                        </GridContent>
+                        <GridName item xs={flexName}>
+                            Bank Name
+                        </GridName>
+                        <GridContent item xs={flexContent}>
+                            <FormControl fullWidth>
+                                <InputLabel>Required *</InputLabel>
+                                <Select
+                                    name="bank_uid"
+                                    value={select}
+                                    onChange={handleSelect}
+                                    required
+                                    label='Required *'
+                                >
+                                    {bankList.map((bank, index) => (
+                                        <MenuItem
+                                            key={index + 1}
+                                            value={index}
+                                        >
+                                            {bank[index + 1]}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </GridContent>
 
-                            <div>
-                                <FormControl fullWidth>
-                                    <Select
-                                        name="bank_name"
-                                        value={select}
-
-                                        onChange={handleSelect}
-                                    >
-                                        {bankList.map((bank, index) => (
-                                            <MenuItem
-                                                key={index + 1}
-                                                value={index}
-                                            >
-                                                {bank[index + 1]}
-                                            </MenuItem>
-                                        ))}
-                                    </Select>
-                                </FormControl>
-                            </div>
-
-
-                        </div>
-                    </div>
-                    <div className="saveButton">
+                    </GridContainer>
+                    <StyledButton>
                         <Button
                             variant="contained"
                             type="submit"
+                            color="success"
                         >
                             Save
                         </Button>
-                    </div>
+                    </StyledButton>
                 </form>
-            </div>
+            </ModalContainer>
+
+
         </>
     )
 }

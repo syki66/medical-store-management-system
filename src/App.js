@@ -7,6 +7,11 @@ import GlobalStyle from './components/GlobalStyle'
 import Login from './pages/Login/Login'
 import {useEffect, useState} from 'react';
 
+import axios from "axios";
+
+axios.defaults.withCredentials = true;
+axios.defaults.xsrfCookieName = 'csrftoken';
+axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN';
 
 function App() {
     const [login, setLogin] = useState(true);

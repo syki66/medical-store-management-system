@@ -11,38 +11,46 @@ import Paper from '@mui/material/Paper';
 
 import Pagination from '@mui/material/Pagination';
 import Button from "@mui/material/Button";
-import {Box, IconButton, Modal, Typography, TextField, Tooltip, Divider} from "@mui/material";
+import {Modal, Snackbar, Alert} from "@mui/material";
 
-import ClearIcon from '@mui/icons-material/Clear';
-
+import styled from 'styled-components';
 
 import AddCompany from './AddCompany';
 import EditCompany from './EditCompany';
 import ViewCompany from './ViewCompany';
 
-import styles from './Company.module.css';
+import Stack from "@mui/material/Stack";
 
-
-const URL = "http://localhost:5000/company/&page=";
+const URL = "http://localhost:8000/company?page=";
 const pageCount = 10;
 
 export default function Company() {
     const [rows, setRows] = useState([]);
-    const [bankList, setbankList] = useState([]);
+    const [bankList, setBankList] = useState([]);
+    const [currPage, setCurrPage] = useState(1);
     const [maxPage, setMaxPage] = useState(10);
+
     const [loading, setLoading] = useState(true);
 
     const [modalState, setModalState] = useState('view');
     const [modalOpen, setModalOpen] = useState(false);
-    const [modalRow, setModalRow] = useState(0);
+    const [modalRow, setModalRow] = useState([]);
 
-    const fetchUrl = async (URL, page) => {
-        const response = await axios.get(URL + page);
-        const resData = response.data;
-        setRows(resData.company_list);
-        setbankList(resData.bank_list);
-        setMaxPage(Math.ceil(resData.companyallcount / pageCount))
-        setLoading(false);
+    const [successOpen, setSuccessOpen] = useState(false);
+    const [errorOpen, setErrorOpen] = useState(false);
+
+    const getData = async (URL, page) => {
+        try{
+            const response = await axios.get(URL + page);
+            const resData = response.data;
+            setRows(resData.company_list);
+            setBankList(resData.bank_list);
+            setMaxPage(Math.ceil(resData.companyallcount / pageCount))
+            setLoading(false);
+            setCurrPage(page);
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     const openModal = (state, row) => {
@@ -60,6 +68,8 @@ export default function Company() {
             return <AddCompany
                 bankList = {bankList}
                 closeModal = {closeModal}
+                setSuccessOpen = {setSuccessOpen}
+                setErrorOpen = {setErrorOpen}
             />;
         } else if (state === 'view') {
             return <ViewCompany
@@ -72,18 +82,40 @@ export default function Company() {
                 row = {row}
                 bankList= {bankList}
                 closeModal = {closeModal}
+                setSuccessOpen = {setSuccessOpen}
+                setErrorOpen = {setErrorOpen}
             />;
         }
     }
 
+    const handleToastClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setSuccessOpen(false);
+        setErrorOpen(false);
+    };
+
     const handlePagi = (event, page) => {
-        fetchUrl(URL, page);
+        getData(URL, page);
+    }
+
+    const init = () => {
+        if (rows.length === 0) {
+            getData(URL, 1);
+            setCurrPage(1);
+        } else {
+            getData(URL, currPage)
+        }
     }
 
     useEffect(() => {
-        fetchUrl(URL, 1);
-    }, []);
-
+        init();
+    }, [
+        successOpen,
+        maxPage,
+        ]
+    );
 
     if (loading) {
         return null; // 로딩중 아이콘 넣기
@@ -91,8 +123,8 @@ export default function Company() {
 
     return (
         <>
-            <div className="innerContainer">
-                <div className="titleContainer">
+            <InnerContainer>
+                <TitleContainer>
                     <div>All Companies</div>
                     <div>
                         <Button 
@@ -103,66 +135,120 @@ export default function Company() {
                             Add Company
                         </Button>
                     </div>
-                </div>
+                </TitleContainer>
                 <TableContainer component={Paper}>
                     <Table sx={{width:'100%'}}>
                         <TableHead>
                             <TableRow>
-                                <TableCell>No.</TableCell>
-                                <TableCell>Name</TableCell>
-                                <TableCell>License No.</TableCell>
-                                <TableCell>Address</TableCell>
-                                <TableCell>Contact No.</TableCell>
-                                <TableCell>Email</TableCell>
-                                <TableCell>Description</TableCell>
-                                <TableCell>Added On</TableCell>
-                                <TableCell>Action</TableCell>
+                                <StyledCell>No.</StyledCell>
+                                <StyledCell>Name</StyledCell>
+                                <StyledCell>License No.</StyledCell>
+                                <StyledCell>Address</StyledCell>
+                                <StyledCell>Contact No.</StyledCell>
+                                <StyledCell>Email</StyledCell>
+                                <StyledCell>Description</StyledCell>
+                                <StyledCell>Added On</StyledCell>
+                                <StyledCell>Action</StyledCell>
                             </TableRow>
                         </TableHead>
-                        <TableBody className={styles.tableBody}>
+                        <TableBody>
                             {rows.map((row) => (
                                 <TableRow
                                     key={row.com_uid}
                                 >
-                                    <TableCell component="th" scope="row">{row.com_uid}</TableCell>
-                                    <TableCell><div>{row.com_name}</div></TableCell>
-                                    <TableCell><div>{row.com_licence_no}</div></TableCell>
-                                    <TableCell><div>{row.com_address}</div></TableCell>
-                                    <TableCell><div>{row.com_contact_no}</div></TableCell>
-                                    <TableCell><div>{row.com_email}</div></TableCell>
-                                    <TableCell><div>{row.com_description}</div></TableCell>
-                                    <TableCell><div>{row.com_joindate}</div></TableCell>
-                                    <TableCell>
-                                        <Button 
-                                            variant="contained" 
-                                            size="small" 
+                                    <StyledCell component="th" scope="row">{row.com_uid}</StyledCell>
+                                    <StyledCell>{row.com_name}</StyledCell>
+                                    <StyledCell>{row.com_licence_no}</StyledCell>
+                                    <StyledCell width='200px'>{row.com_address}</StyledCell>
+                                    <StyledCell>{row.com_contact_no}</StyledCell>
+                                    <StyledCell width='150px'>{row.com_email}</StyledCell>
+                                    <StyledCell width='200px'>{row.com_description}</StyledCell>
+                                    <StyledCell>{row.com_joindate}</StyledCell>
+                                    <StyledCell>
+                                        <Button
+                                            variant="contained"
+                                            size="small"
                                             onClick={() => openModal('view', row)}
                                         >
                                             View
                                         </Button>
-                                    </TableCell>
+                                    </StyledCell>
                                 </TableRow>
                             ))}
                         </TableBody>
                     </Table>
                 </TableContainer>
 
-                <Pagination className="pagination" count={maxPage} onChange={handlePagi} color="primary" />
+                <StyledPagination count={maxPage} onChange={handlePagi} page={currPage} color="primary" />
                 
-            </div>
+            </InnerContainer>
 
-            <Modal
-                className="modal"
+            <StyledModal
                 open={modalOpen}
                 onClose={closeModal}
             >
-
                 <>
-
-                        {selectModal(modalState, modalRow)}
-
+                    {selectModal(modalState, modalRow)}
                 </>
-            </Modal>
+            </StyledModal>
+
+            <Stack spacing={2} sx={{ width: '100%' }}>
+                <Snackbar anchorOrigin={{ vertical: 'top', horizontal: 'center' }} open={successOpen} autoHideDuration={3000} onClose={handleToastClose}>
+                    <Alert onClose={handleToastClose} severity="success" sx={{ width: '100%' }}>
+                        성공적으로 처리 되었습니다.
+                    </Alert>
+                </Snackbar>
+                <Snackbar anchorOrigin={{ vertical: 'top', horizontal: 'center' }} open={errorOpen} autoHideDuration={3000} onClose={handleToastClose}>
+                    <Alert onClose={handleToastClose} severity="error" sx={{ width: '100%' }}>
+                        오류가 발생하였습니다.
+                    </Alert>
+                </Snackbar>
+            </Stack>
         </>
     )
 }
+
+const InnerContainer = styled.div`
+  background-color: #d9d9d9;
+  padding: 20px;
+`;
+
+const TitleContainer = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding-bottom: 15px;
+  div:nth-child(1){
+    font-weight: 600;
+    font-size: xx-large;
+  };
+  div:nth-child(2){
+    text-align: right;
+  };
+`;
+
+const Cell = styled.div`
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      width: ${props => props.width};
+`;
+
+const StyledCell = ({ children, width }) => {
+    return (
+        <TableCell>
+            <Cell width={width}>{children}</Cell>
+        </TableCell>
+    );
+}
+
+const StyledModal = styled(Modal)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const StyledPagination = styled(Pagination)`
+  display: flex;
+  justify-content: center;
+  padding-top: 10px;
+`;
