@@ -63,6 +63,7 @@ export default function Company() {
         setModalOpen(false);
     }
 
+
     const selectModal = (state, row) => {
         if (state === 'add') {
             return <AddCompany
@@ -105,7 +106,7 @@ export default function Company() {
             getData(URL, 1);
             setCurrPage(1);
         } else {
-            getData(URL, currPage)
+            getData(URL, currPage);
         }
     }
 
@@ -152,11 +153,11 @@ export default function Company() {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {rows.map((row) => (
+                            {rows.map((row, index) => (
                                 <TableRow
                                     key={row.com_uid}
                                 >
-                                    <StyledCell component="th" scope="row">{row.com_uid}</StyledCell>
+                                    <StyledCell component="th" scope="row">{(currPage * pageCount - pageCount) + (index + 1)}</StyledCell>
                                     <StyledCell>{row.com_name}</StyledCell>
                                     <StyledCell>{row.com_licence_no}</StyledCell>
                                     <StyledCell width='200px'>{row.com_address}</StyledCell>

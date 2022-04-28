@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { Box, Grid } from "@mui/material";
 
-const gap = '15px 0px';
+const gap = '17px 0px';
 
 const ModalContainer = styled(Box)`
   background-color: #d9d9d9;
@@ -19,13 +19,12 @@ const GridContainer = styled(Grid)`
   padding: 10px;
   width: 700px;
   border-radius: 5px;
-  
 `;
 
 const GridDescription = styled(Grid)`
-  overflow: scroll;
-  height: 200px;
-  //max-height: 200px;
+  overflow-y: auto;
+  min-height: 40px;
+  max-height: 200px;
 `;
 
 const GridInnerTitle = styled(Grid)`

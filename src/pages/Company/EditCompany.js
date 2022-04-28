@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
-import { IconButton, TextField, Tooltip, Button, Select, FormControl, InputLabel, MenuItem } from "@mui/material";
+import {
+    IconButton, TextField, Tooltip, Button, Select, FormControl, InputLabel, MenuItem,
+    Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions
+} from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
 
 import {
@@ -45,6 +48,8 @@ export default function EditCompany({ row, bankList, closeModal, setSuccessOpen,
         "bank_uid": select,
     });
 
+    const [confirmOpen, setConfirmOpen] = useState(false);
+
     const handleSelect = (event) => {
         const { name, value } = event.target
         setSelect(value);
@@ -85,6 +90,7 @@ export default function EditCompany({ row, bankList, closeModal, setSuccessOpen,
             if (res.request.status) {
                 closeModal();
                 setSuccessOpen(true);
+                setConfirmOpen(false);
             } else {
                 console.log(res.request.status);
                 setErrorOpen(true);
@@ -94,6 +100,7 @@ export default function EditCompany({ row, bankList, closeModal, setSuccessOpen,
             setErrorOpen(true);
         }
     }
+
     return (
         <>
             <ModalContainer>
@@ -242,7 +249,7 @@ export default function EditCompany({ row, bankList, closeModal, setSuccessOpen,
                         <Button
                             variant="contained"
                             color="error"
-                            onClick={() => handleDelete(row.com_uid)}
+                            onClick={() => setConfirmOpen(true)}
                         >
                             Delete
                         </Button>
@@ -256,6 +263,22 @@ export default function EditCompany({ row, bankList, closeModal, setSuccessOpen,
                     </StyledButton>
                 </form>
             </ModalContainer>
+
+            <Dialog
+                open={confirmOpen}
+                onClose={() => setConfirmOpen(false)}
+            >
+                <DialogTitle>삭제 확인</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        정말 삭제를 진행하시겠습니까?
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setConfirmOpen(false)}>아니오</Button>
+                    <Button onClick={() => handleDelete(row.com_uid)}>예</Button>
+                </DialogActions>
+            </Dialog>
         </>
     )
 }
