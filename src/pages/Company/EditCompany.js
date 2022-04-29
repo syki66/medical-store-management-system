@@ -16,12 +16,13 @@ import {
     GridContent,
 } from '../../styles/Modal';
 import axios from "axios";
-
+import { baseURL } from '../../variables/baseURL';
 
 const flexName = 4;
 const flexContent = 12 - flexName;
 
-const URL = "http://localhost:8000/company/";
+const path = "company/";
+const URL = baseURL + path;
 
 const findBankIndex = (bankName, bankList) => {
     let index = 0;

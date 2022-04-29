@@ -24,6 +24,8 @@ import {
     GridContent,
 } from '../../styles/Modal';
 
+import { baseURL } from '../../variables/baseURL';
+
 const generateDate = () => {
     let today = new Date();
     let year = today.getFullYear();
@@ -33,7 +35,8 @@ const generateDate = () => {
     return (year + '-' + month + '-' + date);
 }
 
-const URL = "http://localhost:8000/company/";
+const path = 'company/';
+const URL = baseURL + path;
 
 const flexName = 4;
 const flexContent = 12 - flexName;

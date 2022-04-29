@@ -21,10 +21,15 @@ import ViewCompany from './ViewCompany';
 
 import Stack from "@mui/material/Stack";
 
-const URL = "http://localhost:8000/company?page=";
+import { baseURL } from '../../variables/baseURL'
+
+const path = "company?page="
+const URL = baseURL + path;
+
 const pageCount = 10;
 
 export default function Company() {
+    console.log(baseURL)
     const [rows, setRows] = useState([]);
     const [bankList, setBankList] = useState([]);
     const [currPage, setCurrPage] = useState(1);

@@ -2,8 +2,11 @@ import React, { useState } from 'react';
 import { Paper, TextField, Button, Checkbox, FormControlLabel, FormGroup, Grid, Stack, Snackbar, Alert } from "@mui/material";
 import styled from 'styled-components';
 import axios from 'axios';
+import { baseURL } from '../../variables/baseURL'
 
-const URL = 'http://localhost:8000/user/signin/';
+
+const path = 'user/signin/';
+const URL = baseURL + path;
 
 export default function Login( {setLogin} ) {
     const [inputs, setInputs] = useState({
