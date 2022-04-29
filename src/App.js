@@ -1,7 +1,6 @@
 import './App.css';
 import Header from './components/Header'
 import SideMenuBar from "./components/SideMenuBar";
-import Button from '@mui/material/Button';
 import GlobalStyle from './components/GlobalStyle'
 
 import Login from './pages/Login/Login'
@@ -13,8 +12,13 @@ axios.defaults.withCredentials = true;
 axios.defaults.xsrfCookieName = 'csrftoken';
 axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN';
 
+const getLoginSession = () => {
+    const value = sessionStorage.getItem('login')
+    return value;
+}
+
 function App() {
-    const [login, setLogin] = useState(true);
+    const [login, setLogin] = useState(getLoginSession());
 
   return (
     <>
@@ -27,7 +31,9 @@ function App() {
                   </div>
               </>
         ) : (
-            <Login />
+            <Login
+                setLogin = {setLogin}
+            />
         )}
 
 
