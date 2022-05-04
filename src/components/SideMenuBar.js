@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { BrowserRouter, Route, Routes, Link } from "react-router-dom";
+import { Route, Routes, Link } from "react-router-dom";
 import {Divider, List, ListItem, ListItemButton, ListItemText} from "@mui/material";
 
 import "./SideMenuBar.css";
@@ -13,12 +13,9 @@ import Medicine from "../pages/Medicine";
 import Bill from "../pages/Bill/Bill";
 import CustomerRequest from "../pages/Request/CustomerRequest";
 
-
 export default function SideMenuBar() {
     return (
         <>
-
-            <BrowserRouter>
                 <List className="sideNav" component="nav" aria-label="mailbox folders">
                     <Link className="link" to="/">
                         <ListItem button divider>
@@ -56,7 +53,6 @@ export default function SideMenuBar() {
                         </ListItem>
                     </Link>
                 </List>
-
                 <Routes>
                     <Route className="" path="/" element={<Home/>} />
                     <Route className="" path="/company" element={<Company/>} />
@@ -66,9 +62,6 @@ export default function SideMenuBar() {
                     <Route className="" path="/bill" element={<Bill/>} />
                     <Route className="" path="/customerRequest" element={<CustomerRequest/>} />
                 </Routes>
-
-            </BrowserRouter>
-
         </>
     )
 }
