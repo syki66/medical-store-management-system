@@ -1,25 +1,218 @@
 import React, {useEffect, useState} from 'react';
+import axios from "axios";
+
+import ProfitChart from "./ProfitChart";
+import SellChart from "./SellChart";
+
 import styled from "styled-components";
 import { Container, Paper } from '@mui/material';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
-import Chart from "../../components/Chart";
-import axios from "axios";
+
+export default function Home() {
+    const [getHomeData, setGetHomeData] = useState([{
+        "user_uid": 1,
+        "user_storename": "씨엔알약국",
+        "user_email": "baek1008@asd.com",
+        "user_totalreqs": 100,
+        "total_medicine" : 300,
+        "user_completedreq": 50,
+        "user_pendingreq": 5,
+        "user_employee": 900,
+        "user_company": 104,
+        "bill_profit": [
+            {
+                date: "2022-03-05",
+                won: 100000
+            },
+            {
+                date: "2022-03-06",
+                won: 160000
+            },
+            {
+                date: "2022-03-07",
+                won: 800000
+            },
+            {
+                date: "2022-03-08",
+                won: 200000
+            },
+            {
+                date: "2022-03-09",
+                won: 330000
+            },
+            {
+                date: "2022-03-10",
+                won: 360000
+            }
+            ,
+            {
+                date: "2022-03-11",
+                won: 30000
+            }
+        ],
+        "bill_total_sell": [
+            {
+                date: "2022-03-05",
+                won: 100000
+            },
+            {
+                date: "2022-03-06",
+                won: 160000
+            },
+            {
+                date: "2022-03-07",
+                won: 800000
+            },
+            {
+                date: "2022-03-08",
+                won: 200000
+            },
+            {
+                date: "2022-03-09",
+                won: 330000
+            },
+            {
+                date: "2022-03-10",
+                won: 360000
+            }
+            ,
+            {
+                date: "2022-03-11",
+                won: 30000
+            }
+        ]
+    }])
+
+    const URL = 'http://localhost:8000/'
+    // const URL = 'http://3.34.144.222:8000/'
+
+    const getData = async () => {
+        // try {
+        //     const response = await axios.get(URL + 'customer/req',
+        //         {
+        //             withCredentials: true
+        //         })
+        //     console.log('customer req', response.data)
+        //     setGetHomeData(response.data)
+        // } catch (error) {
+        //     console.log(error)
+        // }
+    }
+
+    useEffect(() => {
+        getData()
+        // console.log(getHomeData)
+        console.log('getHomeData[0].user_totalreqs', getHomeData[0].user_totalreqs)
+    }, [])
+
+    return (
+        <>
+            <PageContainer>
+                <div className={'first'}>
+                    <div className='titleCon'>
+                        <h3>Dashboard</h3>
+                    </div>
+                    <div className={'bookmarksCon'}>
+                        <div className={'bookmarkColumn fColumn'}>
+                            <Paper className={'indiBoard'} elevation={3}>
+                                <div className={'bookmark fB'}>
+                                    <BookmarkIcon></BookmarkIcon>
+                                </div>
+                                <div className={'detail fD'}>
+                                    <h5>TOTAL REQUEST</h5>
+                                    <p>{getHomeData[0].user_totalreqs}</p>
+                                </div>
+                            </Paper>
+                            <Paper className={'indiBoard'} elevation={3}>
+                                <div className={'bookmark fB'}>
+                                    <BookmarkIcon></BookmarkIcon>
+                                </div>
+                                <div className={'detail fD'}>
+                                    <h5>TOTAL MEDICINE</h5>
+                                    <p>{getHomeData[0].total_medicine}</p>
+                                </div>
+                            </Paper>
+                        </div>
+
+                        <div className={'bookmarkColumn sColumn'}>
+                            <Paper className={'indiBoard'} elevation={3}>
+                                <div className={'bookmark sB'}>
+                                    <BookmarkIcon></BookmarkIcon>
+                                </div>
+                                <div className={'detail sD'}>
+                                    <h5>COMPLETED REQUEST</h5>
+                                    <p>{getHomeData[0].user_completedreq}</p>
+                                </div>
+                            </Paper>
+                            <Paper className={'indiBoard'} elevation={3}>
+
+                                <div className={'bookmark sB'}>
+                                    <BookmarkIcon></BookmarkIcon>
+                                </div>
+                                <div className={'detail sD'}>
+                                    <h5>PENDING REQUEST</h5>
+                                    <p>{getHomeData[0].pendingreq}</p>
+                                </div>
+                            </Paper>
+                        </div>
+
+                        <div className={'bookmarkColumn tColumn'}>
+                            <Paper className={'indiBoard'} elevation={3}>
+
+                                <div className={'bookmark tB'}>
+                                    <BookmarkIcon></BookmarkIcon>
+                                </div>
+                                <div className={'detail tD'}>
+                                    <h5>TOTAL EMPLOYEE</h5>
+                                    <p>{getHomeData[0].user_employee}</p>
+                                </div>
+                            </Paper>
+
+                            <Paper className={'indiBoard'} elevation={3}>
+                                <div className={'bookmark tB'}>
+                                    <BookmarkIcon></BookmarkIcon>
+                                </div>
+                                <div className={'detail tD'}>
+                                    <h5>TOTAL COMPANY</h5>
+                                    <p>{getHomeData[0].user_company}</p>
+                                </div>
+                            </Paper>
+                        </div>
+                    </div>
+                </div>
+                <div className={'second'}>
+                    {getHomeData && (
+                        <>
+                        <ProfitChart getHomeData={getHomeData}/>
+                        <SellChart getHomeData={getHomeData}/>
+                        </>)
+                    }
+                </div>
+            </PageContainer>
+        </>
+    )
+}
 
 const PageContainer = styled.div`
       padding: 1em;
       margin-left: 1em;
+      width: 100%;
       .second {
         display: flex;
-        flex-grow: 1;
+        justify-content: space-between;
         width: 100%;
+        margin-top: 3em;
       }
       .bookmarksCon {
         display: flex;
-        flex-direction: row;
+        flex-direction: column;
+      }
+      .bookmarkColumn {
+        display: flex;
       }
       .indiBoard {
+        width: 100%;
         display: flex;
-        //padding: 1em;
         margin-bottom: 1.2em;
         margin-right: 1.2em;
         color: #FFFFFF;
@@ -65,189 +258,3 @@ const PageContainer = styled.div`
         }
       }
     `
-
-export default function Home() {
-    const [employee, setEmployee] = useState(0)
-    const [medicine, setMedicine] = useState(0)
-    const [company, setCompany] = useState(0)
-
-    const URL = 'http://localhost:8000/'
-
-    const getData = async () => {
-        try {
-            const response = await axios.get(URL + 'employee?page=1',
-                {
-                    withCredentials: true
-                })
-            console.log('total employee response', response)
-            setEmployee(response.data.employeeallcount)
-        } catch (error) {
-            console.log(error)
-        }
-
-        try {
-            const response = await axios.get(URL + 'medicine?page=1',
-                {
-                    withCredentials: true
-                })
-            console.log('total medicine response', response)
-            setMedicine(response.data.medicineallcount)
-        } catch (error) {
-            console.log(error)
-        }
-
-        try {
-            const response = await axios.get(URL + 'company?page=1',
-                {
-                    withCredentials: true
-                })
-            console.log('total company response', response)
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
-    useEffect(() => {
-        getData()
-    }, [])
-
-    return (
-        <>
-            <PageContainer>
-                <div className={'first'}>
-                    <div className='titleCon'>
-                        <h3>Dashboard</h3>
-                    </div>
-                    <div className={'bookmarksCon'}>
-                        <div className={'bookmarkColumn fColumn'}>
-                            <Paper className={'indiBoard'} elevation={3}>
-                                <div className={'bookmark fB'}>
-                                    <BookmarkIcon></BookmarkIcon>
-                                </div>
-                                <div className={'detail fD'}>
-                                    <h5>TOTAL REQUEST</h5>
-                                    <p>6</p>
-                                </div>
-                            </Paper>
-                            <Paper className={'indiBoard'} elevation={3}>
-                                <div className={'bookmark fB'}>
-                                    <BookmarkIcon></BookmarkIcon>
-                                </div>
-                                <div className={'detail fD'}>
-                                    <h5>TOTAL EMPLOYEE</h5>
-                                    <p>{employee}</p>
-                                </div>
-                            </Paper>
-                            <Paper className={'indiBoard'} elevation={3}>
-                                <div className={'bookmark fB'}>
-                                    <BookmarkIcon></BookmarkIcon>
-                                </div>
-                                <div className={'detail fD'}>
-                                    <h5>COMPLETED REQUEST</h5>
-                                    <p>6</p>
-                                </div>
-                            </Paper>
-                        </div>
-
-                        <div className={'bookmarkColumn sColumn'}>
-                            <Paper className={'indiBoard'} elevation={3}>
-                                <div className={'bookmark sB'}>
-                                    <BookmarkIcon></BookmarkIcon>
-                                </div>
-                                <div className={'detail sD'}>
-                                    <h5>TOTAL SALES</h5>
-                                    <p>6</p>
-                                </div>
-                            </Paper>
-                            <Paper className={'indiBoard'} elevation={3}>
-
-                                <div className={'bookmark sB'}>
-                                    <BookmarkIcon></BookmarkIcon>
-                                </div>
-                                <div className={'detail sD'}>
-                                    <h5>TOTAL PROFIT</h5>
-                                    <p>6</p>
-                                </div>
-                            </Paper>
-                            <Paper className={'indiBoard'} elevation={3}>
-                                <div className={'bookmark sB'}>
-                                    <BookmarkIcon></BookmarkIcon>
-                                </div>
-                                <div className={'detail sD'}>
-                                    <h5>PENDING REQUEST</h5>
-                                    <p>6</p>
-                                </div>
-                            </Paper>
-                        </div>
-
-                        <div className={'bookmarkColumn tColumn'}>
-                            <Paper className={'indiBoard'} elevation={3}>
-
-                                <div className={'bookmark tB'}>
-                                    <BookmarkIcon></BookmarkIcon>
-                                </div>
-                                <div className={'detail tD'}>
-                                    <h5>TOTAL MEDICINES</h5>
-                                    <p>{medicine}</p>
-                                </div>
-                            </Paper>
-
-                            <Paper className={'indiBoard'} elevation={3}>
-                                <div className={'bookmark tB'}>
-                                    <BookmarkIcon></BookmarkIcon>
-                                </div>
-                                <div className={'detail tD'}>
-                                    <h5>TOTAL SALES AMOUNT</h5>
-                                    <p>6</p>
-                                </div>
-                            </Paper>
-                            <Paper className={'indiBoard'} elevation={3}>
-                                <div className={'bookmark tB'}>
-                                    <BookmarkIcon></BookmarkIcon>
-                                </div>
-                                <div className={'detail tD'}>
-                                    <h5>TODAY SALES AMOUNT</h5>
-                                    <p>6</p>
-                                </div>
-                            </Paper>
-                        </div>
-                        <div className={'bookmarkColumn lColumn'}>
-                            <Paper className={'indiBoard'} elevation={3}>
-                                <div className={'bookmark lB'}>
-                                    <BookmarkIcon></BookmarkIcon>
-                                </div>
-                                <div className={'detail lD'}>
-                                    <h5>TOTAL COMPANY</h5>
-                                    <p>6</p>
-                                </div>
-                            </Paper>
-                            <Paper className={'indiBoard'} elevation={3}>
-                                <div className={'bookmark lB'}>
-                                    <BookmarkIcon></BookmarkIcon>
-                                </div>
-                                <div className={'detail lD'}>
-                                    <h5>MEDICINE EXPIRE IN WEEK</h5>
-                                    <p>6</p>
-                                </div>
-                            </Paper>
-                            <Paper className={'indiBoard'} elevation={3}>
-                                <div className={'bookmark lB'}>
-                                    <BookmarkIcon></BookmarkIcon>
-                                </div>
-                                <div className={'detail lD'}>
-                                    <h5>TODAY SALES PROFIT</h5>
-                                    <p>6</p>
-                                </div>
-                            </Paper>
-                        </div>
-                    </div>
-                </div>
-                <div className={'second'}>
-                    {/*<Chart />*/}
-                    {/*<Chart />*/}
-                </div>
-            </PageContainer>
-
-        </>
-    )
-}
