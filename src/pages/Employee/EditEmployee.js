@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import {
     IconButton, TextField, Tooltip, Button, Select, FormControl, InputLabel, MenuItem,
     Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions
 } from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
+import IndeterminateCheckBoxIcon from '@mui/icons-material/IndeterminateCheckBox';
+import AddBoxIcon from '@mui/icons-material/AddBox';
 
 import {
     CloseButton,
@@ -14,32 +16,40 @@ import {
     GridInnerTitle,
     GridName,
     GridContent,
+    GridInnerItem,
+    GridInnerContainer,
 } from '../../styles/Modal';
+
+import { findBankIndex, generateDate } from "../../utils/functions"
+
 import axios from "axios";
 import { baseURL } from '../../variables/baseURL';
 
-import { findBankIndex } from "../../utils/functions"
+const path = "employee/";
+const URL = baseURL + path;
 
 const flexName = 4;
 const flexContent = 12 - flexName;
 
-const path = "company/";
-const URL = baseURL + path;
-
-export default function EditCompany({ row, bankList, closeModal, setSuccessOpen, setErrorOpen }) {
+export default function EditEmployee({ row, bankList, closeModal, setSuccessOpen, setErrorOpen }) {
     const [select, setSelect] = useState(findBankIndex(row.bank_name, bankList));
     const [inputs, setInputs] = useState({
-        "com_uid": row.com_uid,
-        "com_name": row.com_name,
-        "com_licence_no": row.com_licence_no,
-        "com_address": row.com_address,
-        "com_contact_no": row.com_contact_no,
-        "com_email": row.com_email,
-        "com_description": row.com_description,
-        "com_joindate": row.com_joindate,
-        "com_account_no": row.com_account_no,
+        "uid": row.uid,
+        "emp_name": row.emp_name,
+        "emp_joindate": row.emp_joindate,
+        "emp_phone": row.emp_phone,
+        "emp_address": row.emp_address,
+        "emp_account_no": row.emp_account_no,
         "bank_uid": select,
+        "emp_salary": row.emp_salary,
     });
+    const [salary, setSalary] = useState({
+        "sal_uid": -1,
+        "sal_date": generateDate(),
+        "sal_joindate": "",
+        "sal_amount": "",
+    })
+    const [salaryArray, setSalaryArray] = useState(row.emp_salary)
 
     const [confirmOpen, setConfirmOpen] = useState(false);
 
@@ -62,8 +72,9 @@ export default function EditCompany({ row, bankList, closeModal, setSuccessOpen,
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+        console.log(inputs)
         try {
-            const res = await axios.patch(URL + row.com_uid, inputs);
+            const res = await axios.patch(URL + row.uid, inputs);
             if (res.request.status) {
                 closeModal();
                 setSuccessOpen(true);
@@ -94,6 +105,28 @@ export default function EditCompany({ row, bankList, closeModal, setSuccessOpen,
         }
     }
 
+    const handleAddSalary = () => {
+        setSalaryArray([salary, ...salaryArray]);
+        setSalary({
+            ...salary,
+            "sal_joindate": "",
+            "sal_amount": "",
+        })
+    }
+
+    const handleDeleteSalary = (index) => {
+        console.log(index)
+        setSalaryArray(salaryArray.filter((v, i) => i != index))
+    }
+
+    const handleSalaryChange = (event) => {
+        const { id, value } = event.target;
+        setSalary({
+            ...salary,
+            [id]: value
+        })
+    }
+
     return (
         <>
             <ModalContainer>
@@ -111,10 +144,10 @@ export default function EditCompany({ row, bankList, closeModal, setSuccessOpen,
                         </GridName>
                         <GridContent item xs={flexContent}>
                             <TextField
-                                id="com_name"
+                                id="emp_name"
                                 required
                                 label="Required"
-                                defaultValue={row.com_name}
+                                defaultValue={row.emp_name}
                                 size="small"
                                 fullWidth
                                 onChange={handleChange}
@@ -122,27 +155,27 @@ export default function EditCompany({ row, bankList, closeModal, setSuccessOpen,
                             />
                         </GridContent>
                         <GridName item xs={flexName}>
-                            License No.
+                            Joining Date
                         </GridName>
                         <GridContent item xs={flexContent}>
                             <TextField
-                                id="com_licence_no"
+                                id="emp_joindate"
                                 required
                                 label="Required"
-                                defaultValue={row.com_licence_no}
+                                defaultValue={row.emp_joindate}
                                 size="small"
                                 fullWidth
                                 onChange={handleChange}
                                 inputProps={{ maxLength: 20 }}
                             />
                         </GridContent>
-                        <GridName item xs={flexName}>Address</GridName>
+                        <GridName item xs={flexName}>Phone</GridName>
                         <GridContent item xs={flexContent}>
                             <TextField
-                                id="com_address"
+                                id="emp_phone"
                                 required
                                 label="Required"
-                                defaultValue={row.com_address}
+                                defaultValue={row.emp_phone}
                                 size="small"
                                 fullWidth
                                 onChange={handleChange}
@@ -150,54 +183,23 @@ export default function EditCompany({ row, bankList, closeModal, setSuccessOpen,
                             />
                         </GridContent>
                         <GridName item xs={flexName}>
-                            Contact No.
+                            Address
                         </GridName>
                         <GridContent item xs={flexContent}>
                             <TextField
-                                id="com_contact_no"
+                                id="emp_address"
                                 required
                                 label="Required"
-                                defaultValue={row.com_contact_no}
+                                defaultValue={row.emp_address}
                                 size="small"
                                 fullWidth
                                 onChange={handleChange}
                                 inputProps={{ maxLength: 15 }}
                             />
                         </GridContent>
-                        <GridName item xs={flexName}>
-                            Email
-                        </GridName>
-                        <GridContent item xs={flexContent}>
-                            <TextField
-                                id="com_email"
-                                required
-                                label="Required"
-                                defaultValue={row.com_email}
-                                size="small"
-                                fullWidth
-                                onChange={handleChange}
-                                inputProps={{ maxLength: 50 }}
-                            />
-                        </GridContent>
-                        <GridName item xs={flexName}>
-                            Description
-                        </GridName>
-                        <GridContent item xs={flexContent}>
-                            <TextField
-                                id="com_description"
-                                required
-                                multiline
-                                rows={5}
-                                label="Required"
-                                defaultValue={row.com_description}
-                                size="small"
-                                fullWidth
-                                onChange={handleChange}
-                                inputProps={{ maxLength: 1000 }}
-                            />
-                        </GridContent>
+
                         <GridInnerTitle item xs={12}>
-                            Company Bank
+                            Employee Bank
                         </GridInnerTitle>
 
                         <GridName item xs={flexName}>
@@ -205,8 +207,8 @@ export default function EditCompany({ row, bankList, closeModal, setSuccessOpen,
                         </GridName>
                         <GridContent item xs={flexContent}>
                             <TextField
-                                id="com_account_no"
-                                defaultValue={row.com_account_no}
+                                id="emp_account_no"
+                                defaultValue={row.emp_account_no}
                                 size="small"
                                 required
                                 label="Required"
@@ -238,6 +240,63 @@ export default function EditCompany({ row, bankList, closeModal, setSuccessOpen,
                                 </Select>
                             </FormControl>
                         </GridContent>
+
+                        <GridInnerTitle item xs={12}>Employee Salary History</GridInnerTitle>
+
+                        <GridInnerContainer container>
+                            <GridInnerItem item xs={5.5}>
+                                <TextField
+                                    id="sal_joindate"
+                                    size="small"
+                                    label="Date"
+                                    fullWidth
+                                    value={salary.sal_joindate}
+                                    onChange={handleSalaryChange}
+                                    inputProps={{ maxLength: 20 }}
+                                />
+                            </GridInnerItem>
+                            <GridInnerItem item xs={5.5}>
+                                <TextField
+                                    id="sal_amount"
+                                    size="small"
+                                    label="Amount"
+                                    fullWidth
+                                    value={salary.sal_amount}
+                                    onChange={handleSalaryChange}
+                                    inputProps={{ maxLength: 20 }}
+                                />
+                            </GridInnerItem>
+                            <GridInnerItem item xs={1}>
+                                <Tooltip title="Add Salary">
+                                    <IconButton onClick={handleAddSalary}>
+                                        <AddBoxIcon color="success" fontSize="large"/>
+                                    </IconButton>
+                                </Tooltip>
+                            </GridInnerItem>
+
+                            <GridInnerItem strong="true" item xs={2}>ID</GridInnerItem>
+                            <GridInnerItem strong="true" item xs={3}>Date</GridInnerItem>
+                            <GridInnerItem strong="true" item xs={3}>Amount</GridInnerItem>
+                            <GridInnerItem strong="true" item xs={3}>Add On</GridInnerItem>
+                            <GridInnerItem strong="true" item xs={1}>Action</GridInnerItem>
+                            {salaryArray.map((each, index) => (
+                                <>
+                                    <GridInnerItem item xs={2}>{index + 1}</GridInnerItem>
+                                    <GridInnerItem item xs={3}>{each.sal_joindate.split(' ')[0]}</GridInnerItem>
+                                    <GridInnerItem item xs={3}>{each.sal_amount}</GridInnerItem>
+                                    <GridInnerItem item xs={3}>{each.sal_date}</GridInnerItem>
+                                    <GridInnerItem item xs={1}>
+                                        <Tooltip title="Delete Salary">
+                                            <IconButton onClick={() => handleDeleteSalary(index)}>
+                                                <IndeterminateCheckBoxIcon color="error" fontSize="large"/>
+                                            </IconButton>
+                                        </Tooltip>
+                                    </GridInnerItem>
+                                </>
+                            ))}
+
+                        </GridInnerContainer>
+
                     </GridContainer>
 
                     <StyledButton>
@@ -271,10 +330,9 @@ export default function EditCompany({ row, bankList, closeModal, setSuccessOpen,
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={() => setConfirmOpen(false)}>아니오</Button>
-                    <Button onClick={() => handleDelete(row.com_uid)}>예</Button>
+                    <Button onClick={() => handleDelete(row.uid)}>예</Button>
                 </DialogActions>
             </Dialog>
         </>
     )
 }
-

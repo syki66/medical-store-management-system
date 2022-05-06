@@ -24,11 +24,11 @@ import {
     GridContent,
 } from '../../styles/Modal';
 
-import { generateDate } from "../../utils/functions"
-
 import { baseURL } from '../../variables/baseURL';
 
-const path = 'company/';
+import { generateDate } from "../../utils/functions"
+
+const path = 'employee/';
 const URL = baseURL + path;
 
 const flexName = 4;
@@ -37,8 +37,7 @@ const flexContent = 12 - flexName;
 export default function AddCompany({ bankList, closeModal, setSuccessOpen, setErrorOpen }) {
     const [select, setSelect] = useState("");
     const [inputs, setInputs] = useState({
-        "com_uid": -1,
-        "com_joindate": generateDate(),
+        "emp_joindate": generateDate(),
     });
 
     const handleSelect = (event) => {
@@ -60,6 +59,7 @@ export default function AddCompany({ bankList, closeModal, setSuccessOpen, setEr
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+        console.log(inputs);
         try {
             const res = await axios.post(URL, inputs);
             if (res.request.status) {
@@ -92,7 +92,7 @@ export default function AddCompany({ bankList, closeModal, setSuccessOpen, setEr
                         </GridName>
                         <GridContent item xs={flexContent}>
                             <TextField
-                                id="com_name"
+                                id="emp_name"
                                 required
                                 label="Required"
                                 size="small"
@@ -102,11 +102,11 @@ export default function AddCompany({ bankList, closeModal, setSuccessOpen, setEr
                             />
                         </GridContent>
                         <GridName item xs={flexName}>
-                            License No.
+                            Joining Date
                         </GridName>
                         <GridContent item xs={flexContent}>
                             <TextField
-                                id="com_licence_no"
+                                id="emp_joindate"
                                 required
                                 label="Required"
                                 size="small"
@@ -116,11 +116,11 @@ export default function AddCompany({ bankList, closeModal, setSuccessOpen, setEr
                             />
                         </GridContent>
                         <GridName item xs={flexName}>
-                            Address
+                            Phone
                         </GridName>
                         <GridContent item xs={flexContent}>
                             <TextField
-                                id="com_address"
+                                id="emp_phone"
                                 required
                                 label="Required"
                                 size="small"
@@ -130,11 +130,11 @@ export default function AddCompany({ bankList, closeModal, setSuccessOpen, setEr
                             />
                         </GridContent>
                         <GridName item xs={flexName}>
-                            Contact No.
+                            Address
                         </GridName>
                         <GridContent item xs={flexContent}>
                             <TextField
-                                id="com_contact_no"
+                                id="emp_address"
                                 required
                                 label="Required"
                                 size="small"
@@ -143,39 +143,9 @@ export default function AddCompany({ bankList, closeModal, setSuccessOpen, setEr
                                 inputProps={{ maxLength: 15 }}
                             />
                         </GridContent>
-                        <GridName item xs={flexName}>
-                            Email
-                        </GridName>
-                        <GridContent item xs={flexContent}>
-                            <TextField
-                                id="com_email"
-                                required
-                                label="Required"
-                                size="small"
-                                fullWidth
-                                onChange={handleChange}
-                                inputProps={{ maxLength: 50 }}
-                            />
-                        </GridContent>
-                        <GridName item xs={flexName}>
-                            Description
-                        </GridName>
-                        <GridContent item xs={flexContent}>
-                            <TextField
-                                id="com_description"
-                                required
-                                multiline
-                                rows={5}
-                                label="Required"
-                                size="small"
-                                fullWidth
-                                onChange={handleChange}
-                                inputProps={{ maxLength: 1000 }}
-                            />
-                        </GridContent>
 
                         <GridInnerTitle item xs={12}>
-                            Company Bank
+                            Employee Bank
                         </GridInnerTitle>
 
                         <GridName item xs={flexName}>
@@ -183,7 +153,7 @@ export default function AddCompany({ bankList, closeModal, setSuccessOpen, setEr
                         </GridName>
                         <GridContent item xs={flexContent}>
                             <TextField
-                                id="com_account_no"
+                                id="emp_account_no"
                                 size="small"
                                 required
                                 label="Required"
