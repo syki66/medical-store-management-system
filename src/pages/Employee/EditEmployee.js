@@ -6,6 +6,7 @@ import {
 import ClearIcon from "@mui/icons-material/Clear";
 import IndeterminateCheckBoxIcon from '@mui/icons-material/IndeterminateCheckBox';
 import AddBoxIcon from '@mui/icons-material/AddBox';
+import styled from 'styled-components';
 
 import {
     CloseButton,
@@ -33,7 +34,7 @@ const flexContent = 12 - flexName;
 
 export default function EditEmployee({ row, bankList, closeModal, setSuccessOpen, setErrorOpen }) {
     const [select, setSelect] = useState(findBankIndex(row.bank_name, bankList));
-    const [inputs, setInputs] = useState({
+    const inputs = useRef({
         "uid": row.uid,
         "emp_name": row.emp_name,
         "emp_joindate": row.emp_joindate,
@@ -48,31 +49,27 @@ export default function EditEmployee({ row, bankList, closeModal, setSuccessOpen
         "sal_date": generateDate(),
         "sal_joindate": "",
         "sal_amount": "",
-    })
+    });
     const [salaryArray, setSalaryArray] = useState(row.emp_salary)
 
     const [confirmOpen, setConfirmOpen] = useState(false);
+    const [dateToday, setDateToday] = useState(generateDate());
 
     const handleSelect = (event) => {
         const { name, value } = event.target
         setSelect(value);
-        setInputs({
-            ...inputs,
-            [name]: value + 1
-        });
+        inputs.current[name] = value + 1;
     };
 
     const handleChange = (event) => {
         const { id, value } = event.target;
-        setInputs({
-            ...inputs,
-            [id]: value
-        });
+        inputs.current[id] = value;
     }
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        console.log(inputs)
+        inputs.current.emp_salary = salaryArray;
+        console.log(inputs.current)
         try {
             const res = await axios.patch(URL + row.uid, inputs);
             if (res.request.status) {
@@ -115,7 +112,6 @@ export default function EditEmployee({ row, bankList, closeModal, setSuccessOpen
     }
 
     const handleDeleteSalary = (index) => {
-        console.log(index)
         setSalaryArray(salaryArray.filter((v, i) => i != index))
     }
 
@@ -161,6 +157,7 @@ export default function EditEmployee({ row, bankList, closeModal, setSuccessOpen
                             <TextField
                                 id="emp_joindate"
                                 required
+                                type="date"
                                 label="Required"
                                 defaultValue={row.emp_joindate}
                                 size="small"
@@ -244,18 +241,22 @@ export default function EditEmployee({ row, bankList, closeModal, setSuccessOpen
                         <GridInnerTitle item xs={12}>Employee Salary History</GridInnerTitle>
 
                         <GridInnerContainer container>
-                            <GridInnerItem item xs={5.5}>
+                            <GridInnerItem item xs={5.4}>
                                 <TextField
                                     id="sal_joindate"
                                     size="small"
-                                    label="Date"
+                                    // label="Date"
+                                    type="date"
                                     fullWidth
                                     value={salary.sal_joindate}
                                     onChange={handleSalaryChange}
                                     inputProps={{ maxLength: 20 }}
                                 />
                             </GridInnerItem>
-                            <GridInnerItem item xs={5.5}>
+                            <GridInnerItem item xs={0.2}>
+
+                            </GridInnerItem>
+                            <GridInnerItem item xs={5.4}>
                                 <TextField
                                     id="sal_amount"
                                     size="small"
@@ -266,13 +267,13 @@ export default function EditEmployee({ row, bankList, closeModal, setSuccessOpen
                                     inputProps={{ maxLength: 20 }}
                                 />
                             </GridInnerItem>
-                            <GridInnerItem item xs={1}>
+                            <GridPlusIcon item xs={1}>
                                 <Tooltip title="Add Salary">
                                     <IconButton onClick={handleAddSalary}>
                                         <AddBoxIcon color="success" fontSize="large"/>
                                     </IconButton>
                                 </Tooltip>
-                            </GridInnerItem>
+                            </GridPlusIcon>
 
                             <GridInnerItem strong="true" item xs={2}>ID</GridInnerItem>
                             <GridInnerItem strong="true" item xs={3}>Date</GridInnerItem>
@@ -285,13 +286,13 @@ export default function EditEmployee({ row, bankList, closeModal, setSuccessOpen
                                     <GridInnerItem item xs={3}>{each.sal_joindate.split(' ')[0]}</GridInnerItem>
                                     <GridInnerItem item xs={3}>{each.sal_amount}</GridInnerItem>
                                     <GridInnerItem item xs={3}>{each.sal_date}</GridInnerItem>
-                                    <GridInnerItem item xs={1}>
+                                    <GridMinusIcon item xs={1}>
                                         <Tooltip title="Delete Salary">
                                             <IconButton onClick={() => handleDeleteSalary(index)}>
-                                                <IndeterminateCheckBoxIcon color="error" fontSize="large"/>
+                                                <IndeterminateCheckBoxIcon color="error" fontSize="medium"/>
                                             </IconButton>
                                         </Tooltip>
-                                    </GridInnerItem>
+                                    </GridMinusIcon>
                                 </>
                             ))}
 
@@ -336,3 +337,15 @@ export default function EditEmployee({ row, bankList, closeModal, setSuccessOpen
         </>
     )
 }
+
+const GridMinusIcon = styled(GridInnerItem)`
+  && {
+    padding: 0px;
+  }
+`
+
+const GridPlusIcon = styled(GridInnerItem)`
+  && {
+    padding: 5px 0px;
+  }
+`

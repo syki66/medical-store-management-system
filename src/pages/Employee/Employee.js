@@ -47,15 +47,11 @@ export default function Employee() {
         try{
             const response = await axios.get(URL + page);
             const resData = response.data;
-            console.log(resData);
             setRows(resData.employee_list);
             setBankList(resData.bank_list);
             setMaxPage(Math.ceil(resData.employeeallcount / pageCount))
             setLoading(false);
             setCurrPage(page);
-
-            console.log(resData)
-
         } catch (error) {
             console.log(error);
         }
@@ -70,7 +66,6 @@ export default function Employee() {
     const closeModal = () => {
         setModalOpen(false);
     }
-
 
     const selectModal = (state, row) => {
         if (state === 'add') {

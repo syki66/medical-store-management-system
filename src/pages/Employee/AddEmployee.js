@@ -108,7 +108,8 @@ export default function AddCompany({ bankList, closeModal, setSuccessOpen, setEr
                             <TextField
                                 id="emp_joindate"
                                 required
-                                label="Required"
+                                // label="Required"
+                                type="date"
                                 size="small"
                                 fullWidth
                                 onChange={handleChange}
