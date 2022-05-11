@@ -3,3 +3,5 @@
 // export const baseURL = 'http://172.31.0.197:8000/';
 
 export const baseURL = 'http://localhost:8000/';
+
+// export const baseURL = 'http://3.36.26.172:8000/';

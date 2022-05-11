@@ -18,7 +18,7 @@ import {
 const flexName = 4;
 const flexContent = 12 - flexName;
 
-export default function ViewCompany({ row, setModalState, closeModal }) {
+export default function ViewEmployee({ row, setModalState, closeModal }) {
 
     return (
         <>

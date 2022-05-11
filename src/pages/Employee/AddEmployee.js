@@ -34,7 +34,7 @@ const URL = baseURL + path;
 const flexName = 4;
 const flexContent = 12 - flexName;
 
-export default function AddCompany({ bankList, closeModal, setSuccessOpen, setErrorOpen }) {
+export default function AddEmployee({ bankList, closeModal, setSuccessOpen, setErrorOpen }) {
     const [select, setSelect] = useState("");
     const [inputs, setInputs] = useState({
         "emp_joindate": generateDate(),

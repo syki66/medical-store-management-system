@@ -21,6 +21,8 @@ const GridContainer = styled(Grid)`
     background-color: #FFFFFF;
     padding: 10px;
     width: 700px;
+    overflow-y: auto;
+    max-height: 800px;
     border-radius: 5px;
   }
 `;
@@ -56,7 +58,7 @@ const GridContent = styled(Grid)`
 
 const GridInnerContainer = styled(Grid)`
   && {
-    max-height: 200px;
+    max-height: 400px;
     overflow-y: auto;
   }
 `;
