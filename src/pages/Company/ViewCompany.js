@@ -1,48 +1,59 @@
-import React, {useEffect, useState} from 'react';
-import {Box, IconButton, Button, Modal, Typography, TextField, Tooltip, Divider} from "@mui/material";
+import React from 'react';
+import {IconButton, Button, Tooltip} from "@mui/material";
 import ClearIcon from '@mui/icons-material/Clear';
+
+import {
+    CloseButton,
+    StyledButton,
+    ModalContainer,
+    GridContainer,
+    GridDescription,
+    GridInnerTitle,
+    GridName,
+    GridContent,
+} from '../../styles/Modal';
+
+const flexName = 4;
+const flexContent = 12 - flexName;
 
 export default function ViewCompany({ row, setModalState, closeModal }) {
 
     return (
         <>
-            <div className="modalContainer">
-                <div className='closeButton'>
+            <ModalContainer>
+                <CloseButton>
                     <Tooltip title="Close">
                         <IconButton onClick={closeModal}>
                             <ClearIcon />
                         </IconButton>
                     </Tooltip>
-                </div>
-                <div className="modalInnerContainer">
-                    <div>
-                        <div>Name</div>
-                        <div>{row.com_name}</div>
-                        <div>License No.</div>
-                        <div>{row.com_licence_no}</div>
-                        <div>Address</div>
-                        <div>{row.com_address}</div>
-                        <div>Contact No.</div>
-                        <div>{row.com_contact_no}</div>
-                        <div>Email</div>
-                        <div>{row.com_email}</div>
-                        <div>Description</div>
-                        <div className="modalDescription">{row.com_description}</div>
-                    </div>
-                    <div className="modalInnerTitle">
-                        Company Bank
-                    </div>
-                    <div>
-                        <div>Account No.</div>
-                        <div>{row.bank_name}</div>
-                        <div>Bank Name</div>
-                        <div>{row.com_account_No}</div>
-                    </div>
-                </div>
-                <div className="editButton">
+                </CloseButton>
+                <GridContainer container>
+                    <GridName item xs={flexName}>Name</GridName>
+                    <GridContent item xs={flexContent}>{row.com_name}</GridContent>
+                    <GridName item xs={flexName}>License No.</GridName>
+                    <GridContent item xs={flexContent}>{row.com_licence_no}</GridContent>
+                    <GridName item xs={flexName}>Address</GridName>
+                    <GridContent item xs={flexContent}>{row.com_address}</GridContent>
+                    <GridName item xs={flexName}>Contact No.</GridName>
+                    <GridContent item xs={flexContent}>{row.com_contact_no}</GridContent>
+                    <GridName item xs={flexName}>Email</GridName>
+                    <GridContent item xs={flexContent}>{row.com_email}</GridContent>
+                    <GridName item xs={flexName}>Description</GridName>
+                    <GridContent item xs={flexContent}>
+                        <GridDescription>{row.com_description}</GridDescription>
+                    </GridContent>
+                    <GridInnerTitle item xs={12}>Company Bank</GridInnerTitle>
+                    <GridName item xs={flexName}>Account No.</GridName>
+                    <GridContent item xs={flexContent}>{row.com_account_no}</GridContent>
+                    <GridName item xs={flexName}>Bank Name</GridName>
+                    <GridContent item xs={flexContent}>{row.bank_name}</GridContent>
+                </GridContainer>
+                <StyledButton>
                     <Button variant="contained" onClick={() => setModalState('edit')}>Edit</Button>
-                </div>
-            </div>
+                </StyledButton>
+            </ModalContainer>
         </>
     )
 }
+
