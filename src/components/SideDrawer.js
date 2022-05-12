@@ -7,7 +7,7 @@ import Home from "../pages/Home/Home";
 import Company from "../pages/Company/Company";
 import CompanyAccount from "../pages/CompanyAccount/CompanyAccount";
 import Employee from "../pages/Employee/Employee";
-import Medicine from "../pages/Medicine";
+import Medicine from "../pages/Medicine/Medicine";
 import Bill from "../pages/Bill/Bill";
 import Request from '../pages/Request/Request';
 import MyPage from "../pages/MyPage/MyPage";

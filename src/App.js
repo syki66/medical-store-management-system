@@ -1,8 +1,6 @@
 import './App.css';
 import { BrowserRouter } from "react-router-dom";
 
-import Header from './components/Header'
-import SideMenuBar from "./components/SideMenuBar";
 import GlobalStyle from './components/GlobalStyle'
 
 import Login from './pages/Login/Login'
