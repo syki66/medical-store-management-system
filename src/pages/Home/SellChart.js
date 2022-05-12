@@ -22,7 +22,7 @@ export default function SellChart(getHomeData) {
                 <LineChart
                     width={500}
                     height={300}
-                    data={getHomeData.getHomeData[0].bill_total_sell}
+                    data={getHomeData.getHomeData.bill_total_sell}
                     margin={{
                         top: 5,
                         right: 20,

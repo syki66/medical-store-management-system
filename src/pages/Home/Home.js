@@ -5,11 +5,11 @@ import ProfitChart from "./ProfitChart";
 import SellChart from "./SellChart";
 
 import styled from "styled-components";
-import { Container, Paper } from '@mui/material';
+import { Paper } from '@mui/material';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 
 export default function Home() {
-    const [getHomeData, setGetHomeData] = useState([{
+    const [getHomeData, setGetHomeData] = useState({
         "user_uid": 1,
         "user_storename": "씨엔알약국",
         "user_email": "baek1008@asd.com",
@@ -81,28 +81,30 @@ export default function Home() {
                 won: 30000
             }
         ]
-    }])
+    })
 
     const URL = 'http://localhost:8000/'
     // const URL = 'http://3.34.144.222:8000/'
+    // const URL = 'http://3.36.26.172:8000/'
 
     const getData = async () => {
-        // try {
-        //     const response = await axios.get(URL + 'customer/req',
-        //         {
-        //             withCredentials: true
-        //         })
-        //     console.log('customer req', response.data)
-        //     setGetHomeData(response.data)
-        // } catch (error) {
-        //     console.log(error)
-        // }
+        try {
+            // const response = await axios.get(URL + 'user',
+            const response = await axios.get(URL + 'medicine?page=1',
+                {
+                    withCredentials: true
+                })
+            console.log('user', response.data)
+            // setGetHomeData(response)
+            // setGetHomeData(response.data)
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     useEffect(() => {
-        getData()
-        // console.log(getHomeData)
-        console.log('getHomeData[0].user_totalreqs', getHomeData[0].user_totalreqs)
+        // getData()
+        // console.log('getHomeData', getHomeData)
     }, [])
 
     return (
@@ -120,7 +122,7 @@ export default function Home() {
                                 </div>
                                 <div className={'detail fD'}>
                                     <h5>TOTAL REQUEST</h5>
-                                    <p>{getHomeData[0].user_totalreqs}</p>
+                                    <p>{getHomeData.user_totalreqs}</p>
                                 </div>
                             </Paper>
                             <Paper className={'indiBoard'} elevation={3}>
@@ -129,7 +131,7 @@ export default function Home() {
                                 </div>
                                 <div className={'detail fD'}>
                                     <h5>TOTAL MEDICINE</h5>
-                                    <p>{getHomeData[0].total_medicine}</p>
+                                    <p>{getHomeData.total_medicine}</p>
                                 </div>
                             </Paper>
                         </div>
@@ -141,7 +143,7 @@ export default function Home() {
                                 </div>
                                 <div className={'detail sD'}>
                                     <h5>COMPLETED REQUEST</h5>
-                                    <p>{getHomeData[0].user_completedreq}</p>
+                                    <p>{getHomeData.user_completedreq}</p>
                                 </div>
                             </Paper>
                             <Paper className={'indiBoard'} elevation={3}>
@@ -151,7 +153,7 @@ export default function Home() {
                                 </div>
                                 <div className={'detail sD'}>
                                     <h5>PENDING REQUEST</h5>
-                                    <p>{getHomeData[0].pendingreq}</p>
+                                    <p>{getHomeData.pendingreq}</p>
                                 </div>
                             </Paper>
                         </div>
@@ -164,7 +166,7 @@ export default function Home() {
                                 </div>
                                 <div className={'detail tD'}>
                                     <h5>TOTAL EMPLOYEE</h5>
-                                    <p>{getHomeData[0].user_employee}</p>
+                                    <p>{getHomeData.user_employee}</p>
                                 </div>
                             </Paper>
 
@@ -174,7 +176,7 @@ export default function Home() {
                                 </div>
                                 <div className={'detail tD'}>
                                     <h5>TOTAL COMPANY</h5>
-                                    <p>{getHomeData[0].user_company}</p>
+                                    <p>{getHomeData.user_company}</p>
                                 </div>
                             </Paper>
                         </div>

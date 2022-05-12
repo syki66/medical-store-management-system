@@ -18,7 +18,7 @@ export default function ProfitChart(getHomeData) {
             <LineChart
                 width={500}
                 height={300}
-                data={getHomeData.getHomeData[0].bill_profit}
+                data={getHomeData.getHomeData.bill_profit}
                 margin={{
                     top: 5,
                     right: 30,
