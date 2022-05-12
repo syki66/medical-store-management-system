@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import { Box, Grid } from "@mui/material";
-import React from "react";
 
 const gap = '17px 0px';
 
@@ -22,6 +21,8 @@ const GridContainer = styled(Grid)`
     background-color: #FFFFFF;
     padding: 10px;
     width: 700px;
+    overflow-y: auto;
+    max-height: 800px;
     border-radius: 5px;
   }
 `;
@@ -55,6 +56,21 @@ const GridContent = styled(Grid)`
   }
 `;
 
+const GridInnerContainer = styled(Grid)`
+  && {
+    max-height: 400px;
+    overflow-y: auto;
+  }
+`;
+
+const GridInnerItem = styled(Grid)`
+  && {
+    font-weight: ${props => props.strong ? "600" : "0"};
+    padding: 10px 0px;
+    border-bottom: solid 1px lightgray;
+  }
+`;
+
 const StyledButton = styled.div`
   text-align: right;
   padding-top: 10px;
@@ -74,4 +90,6 @@ export {
     GridInnerTitle,
     GridName,
     GridContent,
+    GridInnerContainer,
+    GridInnerItem,
 };

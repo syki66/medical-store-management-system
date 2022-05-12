@@ -11,26 +11,26 @@ import Paper from '@mui/material/Paper';
 
 import Pagination from '@mui/material/Pagination';
 import Button from "@mui/material/Button";
-import {Modal, Snackbar, Alert} from "@mui/material";
+import { Modal, Snackbar, Alert } from "@mui/material";
 
 import styled from 'styled-components';
 
-import AddEmployee from './AddEmployee';
-import EditEmployee from './EditEmployee';
-import ViewEmployee from './ViewEmployee';
+import AddMedicine from './AddMedicine';
+import EditMedicine from './EditMedicine';
+import ViewMedicine from './ViewMedicine';
 
 import Stack from "@mui/material/Stack";
 
 import { baseURL } from '../../variables/baseURL'
 
-const path = "employee?page="
+const path = "medicine?page="
 const URL = baseURL + path;
 
 const pageCount = 10;
 
-export default function Employee() {
+export default function Medicine() {
     const [rows, setRows] = useState([]);
-    const [bankList, setBankList] = useState([]);
+    const [companyList, setCompanyList] = useState([]);
     const [currPage, setCurrPage] = useState(1);
     const [maxPage, setMaxPage] = useState(10);
 
@@ -47,9 +47,10 @@ export default function Employee() {
         try{
             const response = await axios.get(URL + page);
             const resData = response.data;
-            setRows(resData.employee_list);
-            setBankList(resData.bank_list);
-            setMaxPage(Math.ceil(resData.employeeallcount / pageCount))
+            console.log(resData);
+            setRows(resData.medicine_list);
+            setCompanyList(resData.company_list);
+            setMaxPage(Math.ceil(resData.medicineallcount / pageCount))
             setLoading(false);
             setCurrPage(page);
         } catch (error) {
@@ -69,22 +70,22 @@ export default function Employee() {
 
     const selectModal = (state, row) => {
         if (state === 'add') {
-            return <AddEmployee
-                bankList = {bankList}
+            return <AddMedicine
+                companyList = {companyList}
                 closeModal = {closeModal}
                 setSuccessOpen = {setSuccessOpen}
                 setErrorOpen = {setErrorOpen}
             />;
         } else if (state === 'view') {
-            return <ViewEmployee
+            return <ViewMedicine
                 row = {row}
                 setModalState = {setModalState}
                 closeModal = {closeModal}
             />;
         } else if (state === 'edit') {
-            return <EditEmployee
+            return <EditMedicine
                 row = {row}
-                bankList= {bankList}
+                companyList= {companyList}
                 closeModal = {closeModal}
                 setSuccessOpen = {setSuccessOpen}
                 setErrorOpen = {setErrorOpen}
@@ -130,14 +131,14 @@ export default function Employee() {
         <>
             <InnerContainer>
                 <TitleContainer>
-                    <div>All Employee Data</div>
+                    <div>Manage Medicine</div>
                     <div>
                         <Button
                             variant="contained"
                             size="medium"
                             onClick={() => openModal('add')}
                         >
-                            Add Employee
+                            Add Medicine
                         </Button>
                     </div>
                 </TitleContainer>
@@ -147,24 +148,30 @@ export default function Employee() {
                             <TableRow>
                                 <StyledCell>No.</StyledCell>
                                 <StyledCell>Name</StyledCell>
-                                <StyledCell>Joining Date</StyledCell>
-                                <StyledCell>Phone</StyledCell>
-                                <StyledCell>Address</StyledCell>
-                                <StyledCell>Added On</StyledCell>
+                                <StyledCell>Medical Type</StyledCell>
+                                <StyledCell>Buy Price</StyledCell>
+                                <StyledCell>Sell Price</StyledCell>
+                                <StyledCell>Expire Date</StyledCell>
+                                <StyledCell>Mfg Date</StyledCell>
+                                <StyledCell>In Stock</StyledCell>
+                                <StyledCell>Company</StyledCell>
                                 <StyledCell>Action</StyledCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             {rows.map((row, index) => (
                                 <TableRow
-                                    key={row.com_uid}
+                                    key={row.med_uid}
                                 >
                                     <StyledCell component="th" scope="row">{(currPage * pageCount - pageCount) + (index + 1)}</StyledCell>
-                                    <StyledCell>{row.emp_name}</StyledCell>
-                                    <StyledCell>{row.emp_added_on}</StyledCell>
-                                    <StyledCell width='200px'>{row.emp_phone}</StyledCell>
-                                    <StyledCell>{row.emp_address}</StyledCell>
-                                    <StyledCell width='150px'>{row.emp_joindate}</StyledCell>
+                                    <StyledCell>{row.med_name}</StyledCell>
+                                    <StyledCell>{row.med_type}</StyledCell>
+                                    <StyledCell>{row.med_buyprice}</StyledCell>
+                                    <StyledCell>{row.med_sellprice}</StyledCell>
+                                    <StyledCell>{row.med_expire}</StyledCell>
+                                    <StyledCell>{row.med_mfg}</StyledCell>
+                                    <StyledCell>{row.med_instock}</StyledCell>
+                                    <StyledCell>{row.med_company}</StyledCell>
                                     <StyledCell>
                                         <Button
                                             variant="contained"
