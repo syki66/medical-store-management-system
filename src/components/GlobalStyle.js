@@ -7,6 +7,13 @@ const GlobalStyle = createGlobalStyle`
     font-size: 1.5rem;
     margin-bottom: 2rem;
   }
+
+  .link {
+    text-decoration: none;
+    color: black;
+  }
+
 `
+
 
 export default GlobalStyle
