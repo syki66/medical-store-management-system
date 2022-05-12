@@ -9,7 +9,8 @@ import CompanyAccount from "../pages/CompanyAccount/CompanyAccount";
 import Employee from "../pages/Employee/Employee";
 import Medicine from "../pages/Medicine";
 import Bill from "../pages/Bill/Bill";
-import CustomerRequest from "../pages/Request/CustomerRequest";
+import Request from '../pages/Request/Request';
+import MyPage from "../pages/MyPage/MyPage";
 
 import { styled, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
@@ -27,9 +28,16 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 
+import AccountCircle from '@mui/icons-material/AccountCircle';
+import MenuItem from '@mui/material/MenuItem';
+import Menu from '@mui/material/Menu';
+
 
 
 export default function SideDrawer() {
+    const [auth, setAuth] = React.useState(true);
+    const [anchorEl, setAnchorEl] = React.useState(null);
+
     const navigate = useNavigate()
 
     const goToHome = () => {
@@ -47,10 +55,25 @@ export default function SideDrawer() {
         setOpen(false);
     };
 
+    const handleChange = (event) => {
+        setAuth(event.target.checked);
+    };
+
+    const handleMenu = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+
     return (
         <Box sx={{ display: 'flex' }}>
+
             <CssBaseline />
+
             <AppBar position="fixed" open={open} sx={{backgroundColor: '#f2413b'}} >
+
                 <Toolbar>
                     <IconButton
                         color="inherit"
@@ -61,11 +84,43 @@ export default function SideDrawer() {
                     >
                         <MenuIcon />
                     </IconButton>
+
                     <Typography variant="h6" noWrap component="div">
                         <h6 className='logo' onClick={() => goToHome()}>Medical Store Management System</h6>
                     </Typography>
+                        <IconButton
+                            size="large"
+                            aria-label="account of current user"
+                            aria-controls="menu-appbar"
+                            aria-haspopup="true"
+                            onClick={handleMenu}
+                            color="inherit"
+                        >
+                            <AccountCircle />
+                        </IconButton>
+                        <Menu
+                            id="menu-appbar"
+                            anchorEl={anchorEl}
+                            anchorOrigin={{
+                                vertical: 'top',
+                                horizontal: 'right',
+                            }}
+                            keepMounted
+                            transformOrigin={{
+                                vertical: 'top',
+                                horizontal: 'right',
+                            }}
+                            open={Boolean(anchorEl)}
+                            onClose={handleClose}
+                        >
+                            <Link to="/myPage">
+                                <MenuItem onClick={handleClose}>My Information</MenuItem>
+                            </Link>
+                            <MenuItem onClick={handleClose}>Logout</MenuItem>
+                        </Menu>
                 </Toolbar>
             </AppBar>
+
             <Drawer
                 sx={{
                     width: drawerWidth,
@@ -85,7 +140,7 @@ export default function SideDrawer() {
                     </IconButton>
                 </DrawerHeader>
                 <Divider />
-                    <List className="sideNav" component="nav" aria-label="mailbox folders">
+                    <List sx={{backgroundColor: '#FAEBD7'}} className="sideNav" component="nav" aria-label="mailbox folders">
                         <Link className="link" to="/">
                             <ListItem button divider>
                                 <ListItemText primary="Home" />
@@ -132,7 +187,8 @@ export default function SideDrawer() {
                         <Route className="" path="/employee" element={<Employee/>} />
                         <Route className="" path="/medicine" element={<Medicine/>} />
                         <Route className="" path="/bill" element={<Bill/>} />
-                        <Route className="" path="/customerRequest" element={<CustomerRequest/>} />
+                        <Route className="" path="/customerRequest" element={<Request/>} />
+                        <Route className="" path="/myPage" element={<MyPage/>} />
                     </Routes>
             </Main>
         </Box>
