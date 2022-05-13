@@ -1,20 +1,63 @@
 import React, { useState } from 'react';
-import { Paper, TextField, Button, Checkbox, FormControlLabel, FormGroup, Grid, Stack, Snackbar, Alert } from "@mui/material";
+import {
+    Paper,
+    TextField,
+    Button,
+    Checkbox,
+    FormControlLabel,
+    FormGroup,
+    Grid,
+    Stack,
+    Snackbar,
+    Alert,
+    Modal
+} from "@mui/material";
 import styled from 'styled-components';
 import axios from 'axios';
 import { baseURL } from '../../variables/baseURL'
-
+import ResetPassword from './ResetPassword';
+import Register from '../../pages/Login/Register';
 
 const path = 'user/signin/';
 const URL = baseURL + path;
 
-export default function Login( {setLogin} ) {
+export default function Login( { setLogin } ) {
     const [inputs, setInputs] = useState({
         user_email: '',
         user_pw: ''
     })
 
+    const [successOpen, setSuccessOpen] = useState(false);
     const [errorOpen, setErrorOpen] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('error');
+
+    const [modalState, setModalState] = useState('register');
+    const [modalOpen, setModalOpen] = useState(false);
+
+    const openModal = (state) => {
+        setModalState(state);
+        setModalOpen(true);
+    }
+
+    const closeModal = () => {
+        setModalOpen(false);
+    }
+
+    const selectModal = (state) => {
+        if (state === 'register') {
+            return <Register
+                closeModal = {closeModal}
+                setSuccessOpen = {setSuccessOpen}
+                setErrorOpen = {setErrorOpen}
+            />;
+        } else if (state === 'findPassword') {
+            return <ResetPassword
+                closeModal = {closeModal}
+                setSuccessOpen = {setSuccessOpen}
+                setErrorOpen = {setErrorOpen}
+            />;
+        }
+    }
 
     const handleChange = (event) => {
         const { id, value } = event.target;
@@ -23,6 +66,7 @@ export default function Login( {setLogin} ) {
             [id]: value
         });
     }
+
     const handleSubmit = async (event) => {
         event.preventDefault();
         try{
@@ -65,7 +109,7 @@ export default function Login( {setLogin} ) {
                                 <TextField
                                     id="user_email"
                                     fullWidth
-                                    label="이메일"
+                                    label="E-Mail"
                                     variant="outlined"
                                     required
                                     onChange={handleChange}
@@ -77,7 +121,7 @@ export default function Login( {setLogin} ) {
                                     id="user_pw"
                                     type="password"
                                     fullWidth
-                                    label="비밀번호"
+                                    label="Password"
                                     variant="outlined"
                                     required
                                     onChange={handleChange}
@@ -100,8 +144,8 @@ export default function Login( {setLogin} ) {
                             </Grid>
                             <Grid item xs={12}>
                                 <LinkGroup>
-                                    <Register>회원가입</Register>
-                                    <FindPassword>비밀번호 찾기</FindPassword>
+                                    <RegisterLink onClick={() => openModal('register')}>회원가입</RegisterLink>
+                                    <FindPasswordLink onClick={() => openModal('findPassword')}>비밀번호 찾기</FindPasswordLink>
                                 </LinkGroup>
                             </Grid>
                         </Grid>
@@ -109,10 +153,24 @@ export default function Login( {setLogin} ) {
                 </InnerContainer>
             </Container>
 
+            <StyledModal
+                open={modalOpen}
+                onClose={closeModal}
+            >
+                <>
+                    {selectModal(modalState)}
+                </>
+            </StyledModal>
+
             <Stack spacing={2} sx={{ width: '100%' }}>
                 <Snackbar anchorOrigin={{ vertical: 'top', horizontal: 'center' }} open={errorOpen} autoHideDuration={3000} onClose={handleToastClose}>
                     <Alert onClose={handleToastClose} severity="error" sx={{ width: '100%' }}>
-                        이메일, 패스워드를 확인해주세요.
+                        {errorMessage}
+                    </Alert>
+                </Snackbar>
+                <Snackbar anchorOrigin={{ vertical: 'top', horizontal: 'center' }} open={successOpen} autoHideDuration={3000} onClose={handleToastClose}>
+                    <Alert onClose={handleToastClose} severity="success" sx={{ width: '100%' }}>
+                        성공적으로 처리 되었습니다.
                     </Alert>
                 </Snackbar>
             </Stack>
@@ -126,13 +184,15 @@ const Container = styled.div`
 `;
 
 const InnerContainer = styled(Paper)`
-    background-color: white;
-    width: 350px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    padding: 50px;
+    && {
+        background-color: white;
+        width: 350px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 50px;
+    }
 `;
 
 const Title = styled.div`
@@ -148,11 +208,27 @@ const LinkGroup = styled.div`
     color: #99999a;
 `;
 
-const Register = styled.span`
+const RegisterLink = styled.span`
     border-right: solid 1px;
     padding: 0px 10px;
+    cursor: pointer;
+    &:hover {
+      text-decoration: underline;
+    }
 `;
 
-const FindPassword = styled.span`
+const FindPasswordLink = styled.span`
     padding: 0px 10px;
+    cursor: pointer;
+    &:hover {
+      text-decoration: underline;
+    }
+`;
+
+const StyledModal = styled(Modal)`
+    && {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 `;
