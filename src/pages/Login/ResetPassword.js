@@ -3,7 +3,7 @@ import React, {useState, useRef} from "react";
 import axios from "axios";
 import styled from "styled-components";
 import {baseURL} from "../../variables/baseURL";
-import {checkPasswordValidation} from "../../utils/functions";
+import {checkValidation} from "../../utils/functions";
 
 const path = 'user/';
 const URL = baseURL + path;
@@ -15,7 +15,7 @@ export default function ResetPassword( {closeModal, setSuccessOpen, setErrorOpen
     })
     const [newPassword, setNewPassword] = useState({
         "user_new_pw": "",
-        "user_confirm_pw": ""
+        "user_pw_confirm": ""
     });
     const [confirmed, setConfirmed] = useState(false);
     const [inputDisabled, setInputDisabled] = useState(false);
@@ -25,7 +25,7 @@ export default function ResetPassword( {closeModal, setSuccessOpen, setErrorOpen
             state: false,
             helperText: "",
         },
-        "user_confirm_pw": {
+        "user_pw_confirm": {
             state: false,
             helperText: "",
         }
@@ -33,10 +33,10 @@ export default function ResetPassword( {closeModal, setSuccessOpen, setErrorOpen
 
     const checkPassword = (event) => {
         const { id, value } = event.target;
-        const { user_new_pw, user_confirm_pw } = validError.current;
+        const { user_new_pw, user_pw_confirm } = validError.current;
 
         if (id === 'user_new_pw'){
-            if (!checkPasswordValidation(value)) {
+            if (!checkValidation(id, value)) {
                 user_new_pw.state = true;
                 user_new_pw.helperText = "8~64자 영문 대 소문자, 숫자, 특수문자를 사용하세요.";
             } else {
@@ -45,13 +45,13 @@ export default function ResetPassword( {closeModal, setSuccessOpen, setErrorOpen
             }
 
         }
-        if (id === 'user_confirm_pw'){
+        if (id === 'user_pw_confirm'){
             if (newPassword.user_new_pw !== value){
-                user_confirm_pw.state = true;
-                user_confirm_pw.helperText = "패스워드가 일치하지 않습니다.";
+                user_pw_confirm.state = true;
+                user_pw_confirm.helperText = "패스워드가 일치하지 않습니다.";
             } else {
-                user_confirm_pw.state = false;
-                user_confirm_pw.helperText = "패스워드가 일치합니다.";
+                user_pw_confirm.state = false;
+                user_pw_confirm.helperText = "패스워드가 일치합니다.";
             }
         }
 
@@ -73,7 +73,7 @@ export default function ResetPassword( {closeModal, setSuccessOpen, setErrorOpen
         event.preventDefault();
         if (confirmed){
             try{
-                if (validError.current.user_confirm_pw.state || !newPassword.user_confirm_pw) {
+                if (validError.current.user_pw_confirm.state || !newPassword.user_pw_confirm) {
                     setErrorOpen(true);
                     throw '비밀번호가 일치하지 않습니다.';
                 }
@@ -159,15 +159,15 @@ export default function ResetPassword( {closeModal, setSuccessOpen, setErrorOpen
                                     </Grid>
                                     <Grid item xs={12}>
                                         <TextField
-                                            id="user_confirm_pw"
+                                            id="user_pw_confirm"
                                             fullWidth
                                             type="password"
                                             label="Confirm Password"
                                             variant="outlined"
                                             required
                                             onChange={checkPassword}
-                                            error={validError.current.user_confirm_pw.state}
-                                            helperText={validError.current.user_confirm_pw.helperText}
+                                            error={validError.current.user_pw_confirm.state}
+                                            helperText={validError.current.user_pw_confirm.helperText}
                                             inputProps={{ maxLength: 64 }}
                                         />
                                     </Grid>
