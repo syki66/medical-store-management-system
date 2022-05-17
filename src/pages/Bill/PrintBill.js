@@ -12,7 +12,6 @@ import styled from 'styled-components';
 import {useReactToPrint} from 'react-to-print';
 
 export default function PrintBill({formRef, detailList, medList}) {
-
     const componentRef = useRef();
     const handlePrint = useReactToPrint({
         content: () => componentRef.current,
@@ -25,17 +24,6 @@ export default function PrintBill({formRef, detailList, medList}) {
     }
 
     const totalPrice = totalAdd(detailList);
-
-    const findMedName = useCallback((idx) => {
-        for(let i=0; i<detailList.length; i++) {
-            return medList.map((medItem, idx) => {
-                if(medItem.med_uid == detailList[i].med_uid) {
-                    return medItem.med_name;
-                }
-            })
-        }
-    }, [detailList]);
-
 
     return(
         <>
@@ -88,7 +76,13 @@ export default function PrintBill({formRef, detailList, medList}) {
                         {detailList.map((detailItem, idx) => (
                             <TableRow key={detailItem.idx}>
                                 <TableCell align="left">{detailItem.sr_no}</TableCell>
-                                <TableCell align="left">{findMedName(idx)}</TableCell>
+                                {
+                                    medList.map((medItem) => {
+                                        if(medItem.med_uid == detailItem.med_uid) {
+                                            return <TableCell align="left">{medItem.med_name}</TableCell>
+                                        }
+                                    })
+                                }
                                 <TableCell align="left">{detailItem.qty}</TableCell>
                                 <TableCell align="left">{detailItem.qty_type}</TableCell>
                                 <TableCell align="left">{detailItem.price}</TableCell>
