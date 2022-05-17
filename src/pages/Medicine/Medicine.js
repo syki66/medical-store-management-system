@@ -23,13 +23,12 @@ import ViewMedicine from './ViewMedicine';
 import Stack from "@mui/material/Stack";
 
 import { baseURL } from '../../variables/baseURL'
+import Loading from "../../components/Loading";
 
 const path = "medicine?page="
 const URL = baseURL + path;
 
 const pageCount = 10;
-
-
 
 export default function Medicine() {
     const location = useLocation();
@@ -131,7 +130,7 @@ export default function Medicine() {
     );
 
     if (loading) {
-        return null; // 로딩중 아이콘 넣기
+        return <Loading />
     }
 
     return (

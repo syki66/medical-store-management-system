@@ -23,6 +23,7 @@ import ViewEmployee from './ViewEmployee';
 import Stack from "@mui/material/Stack";
 
 import { baseURL } from '../../variables/baseURL'
+import Loading from "../../components/Loading";
 
 const path = "employee?page="
 const URL = baseURL + path;
@@ -36,7 +37,7 @@ export default function Employee() {
 
     const [rows, setRows] = useState([]);
     const [bankList, setBankList] = useState([]);
-    const [currPage, setCurrPage] = useState(1);
+    const [currPage, setCurrPage] = useState(pageIndex);
     const [maxPage, setMaxPage] = useState(10);
 
     const [loading, setLoading] = useState(true);
@@ -128,7 +129,7 @@ export default function Employee() {
     );
 
     if (loading) {
-        return null; // 로딩중 아이콘 넣기
+        return <Loading />
     }
 
     return (

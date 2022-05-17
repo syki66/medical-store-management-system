@@ -20,6 +20,8 @@ import AddCompany from './AddCompany';
 import EditCompany from './EditCompany';
 import ViewCompany from './ViewCompany';
 
+import Loading from './../../components/Loading'
+
 import Stack from "@mui/material/Stack";
 
 import { baseURL } from '../../variables/baseURL'
@@ -129,7 +131,7 @@ export default function Company() {
     );
 
     if (loading) {
-        return null; // 로딩중 아이콘 넣기
+        return <Loading />
     }
 
     return (
