@@ -22,6 +22,7 @@ import {
 
 import axios from "axios";
 import { baseURL } from '../../variables/baseURL';
+import {numberWithCommas} from "../../utils/functions";
 
 const path = "medicine/";
 const URL = baseURL + path;
@@ -73,26 +74,30 @@ export default function AddMedicine({ companyList, closeModal, setSuccessOpen, s
     };
 
     const handleAddDetail = () => {
-        setSaltArray([salt, ...saltArray]);
-        setSalt({
-            ...salt,
-            "salt_name": "",
-            "salt_qty": "",
-            "salt_qty_type": "",
-            "salt_desc": "",
-        })
+        if (salt.salt_name !== '' && salt.salt_qty !== '' && salt.salt_qty_type !== '' && salt.salt_desc !== '') {
+            setSaltArray([salt, ...saltArray]);
+            setSalt({
+                ...salt,
+                "salt_name": "",
+                "salt_qty": "",
+                "salt_qty_type": "",
+                "salt_desc": "",
+            })
+        }
     }
 
     const handleDeleteDetail = (index) => {
         setSaltArray(saltArray.filter((v, i) => i != index))
     }
 
-    const handleDetailChange = (event) => {
+    const handleDetailChange = (event, regex) => {
         const { id, value } = event.target;
-        setSalt({
-            ...salt,
-            [id]: value
-        })
+        if (!regex || regex.test(value)) {
+            setSalt({
+                ...salt,
+                [id]: value
+            })
+        }
     }
 
     return (
@@ -224,11 +229,13 @@ export default function AddMedicine({ companyList, closeModal, setSuccessOpen, s
                             <TextField
                                 id="med_desc"
                                 required
+                                multiline
+                                rows={5}
                                 label="Required"
                                 size="small"
                                 fullWidth
                                 onChange={handleChange}
-                                inputProps={{ maxLength: 20 }}
+                                inputProps={{ maxLength: 1000 }}
                             />
                         </GridContent>
                         <GridName item xs={flexName}>
@@ -306,7 +313,7 @@ export default function AddMedicine({ companyList, closeModal, setSuccessOpen, s
                                     label="Salt Qty"
                                     fullWidth
                                     value={salt.salt_qty}
-                                    onChange={handleDetailChange}
+                                    onChange={(event) => handleDetailChange(event, /^\d{0,2}$/)}
                                     inputProps={{ maxLength: 20 }}
                                 />
                             </GridInnerItem>
@@ -348,9 +355,16 @@ export default function AddMedicine({ companyList, closeModal, setSuccessOpen, s
                             <GridInnerItem strong="true" item xs={3}>Salt Description</GridInnerItem>
                             <GridInnerItem strong="true" item xs={1}>Action</GridInnerItem>
                             {saltArray.map((each, index) => (
-                                <>
+                                <React.Fragment
+                                    key={index}
+                                >
                                     <GridInnerItem item xs={2}>{each.salt_name}</GridInnerItem>
-                                    <GridInnerItem item xs={3}>{each.salt_qty}</GridInnerItem>
+                                    <GridInnerItem item xs={3}>
+                                        {each.salt_qty.endsWith('.000') ?
+                                            numberWithCommas(each.salt_qty) :
+                                            numberWithCommas(each.salt_qty + '.000')
+                                        }
+                                    </GridInnerItem>
                                     <GridInnerItem item xs={3}>{each.salt_qty_type}</GridInnerItem>
                                     <GridInnerItem item xs={3}>{each.salt_desc}</GridInnerItem>
                                     <GridMinusIcon item xs={1}>
@@ -360,7 +374,7 @@ export default function AddMedicine({ companyList, closeModal, setSuccessOpen, s
                                             </IconButton>
                                         </Tooltip>
                                     </GridMinusIcon>
-                                </>
+                                </React.Fragment>
                             ))}
 
                         </GridInnerContainer>

@@ -157,14 +157,14 @@ export default function Employee() {
                         <TableBody>
                             {rows.map((row, index) => (
                                 <TableRow
-                                    key={row.com_uid}
+                                    key={row.uid}
                                 >
                                     <StyledCell component="th" scope="row">{(currPage * pageCount - pageCount) + (index + 1)}</StyledCell>
                                     <StyledCell>{row.emp_name}</StyledCell>
-                                    <StyledCell>{row.emp_added_on}</StyledCell>
+                                    <StyledCell>{row.emp_joindate}</StyledCell>
                                     <StyledCell width='200px'>{row.emp_phone}</StyledCell>
                                     <StyledCell>{row.emp_address}</StyledCell>
-                                    <StyledCell width='150px'>{row.emp_joindate}</StyledCell>
+                                    <StyledCell width='150px'>{row.emp_added_on}</StyledCell>
                                     <StyledCell>
                                         <Button
                                             variant="contained"

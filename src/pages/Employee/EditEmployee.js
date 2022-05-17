@@ -1,4 +1,4 @@
-import React, {useState, useRef, useEffect} from 'react';
+import React, {useState, useRef} from 'react';
 import {
     IconButton, TextField, Tooltip, Button, Select, FormControl, InputLabel, MenuItem,
     Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions
@@ -21,7 +21,7 @@ import {
     GridInnerContainer,
 } from '../../styles/Modal';
 
-import { findBankIndex, generateDate } from "../../utils/functions"
+import { findBankIndex, generateDate, numberWithCommas } from "../../utils/functions"
 
 import axios from "axios";
 import { baseURL } from '../../variables/baseURL';
@@ -35,14 +35,14 @@ const flexContent = 12 - flexName;
 export default function EditEmployee({ row, bankList, closeModal, setSuccessOpen, setErrorOpen }) {
     const [select, setSelect] = useState(findBankIndex(row.bank_name, bankList));
     const inputs = useRef({
-        "uid": row.uid,
         "emp_name": row.emp_name,
         "emp_joindate": row.emp_joindate,
         "emp_phone": row.emp_phone,
         "emp_address": row.emp_address,
         "emp_account_no": row.emp_account_no,
-        "bank_uid": select,
+        "bank_uid": select + 1,
         "emp_salary": row.emp_salary,
+        "emp_added_on": row.emp_added_on,
     });
     const [salary, setSalary] = useState({
         "sal_uid": -1,
@@ -53,7 +53,6 @@ export default function EditEmployee({ row, bankList, closeModal, setSuccessOpen
     const [salaryArray, setSalaryArray] = useState(row.emp_salary)
 
     const [confirmOpen, setConfirmOpen] = useState(false);
-    const [dateToday, setDateToday] = useState(generateDate());
 
     const handleSelect = (event) => {
         const { name, value } = event.target
@@ -71,7 +70,7 @@ export default function EditEmployee({ row, bankList, closeModal, setSuccessOpen
         inputs.current.emp_salary = salaryArray;
         console.log(inputs.current)
         try {
-            const res = await axios.patch(URL + row.uid, inputs);
+            const res = await axios.patch(URL + row.uid + '/', inputs.current);
             if (res.request.status) {
                 closeModal();
                 setSuccessOpen(true);
@@ -103,24 +102,28 @@ export default function EditEmployee({ row, bankList, closeModal, setSuccessOpen
     }
 
     const handleAddSalary = () => {
-        setSalaryArray([salary, ...salaryArray]);
-        setSalary({
-            ...salary,
-            "sal_joindate": "",
-            "sal_amount": "",
-        })
+        if (salary.sal_joindate !== '' && salary.sal_amount !== ''){
+            setSalaryArray([salary, ...salaryArray]);
+            setSalary({
+                ...salary,
+                "sal_joindate": "",
+                "sal_amount": "",
+            })
+        }
     }
 
     const handleDeleteSalary = (index) => {
         setSalaryArray(salaryArray.filter((v, i) => i != index))
     }
 
-    const handleSalaryChange = (event) => {
+    const handleSalaryChange = (event, regex) => {
         const { id, value } = event.target;
-        setSalary({
-            ...salary,
-            [id]: value
-        })
+        if (!regex || regex.test(value)){
+            setSalary({
+                ...salary,
+                [id]: value
+            })
+        }
     }
 
     return (
@@ -249,7 +252,7 @@ export default function EditEmployee({ row, bankList, closeModal, setSuccessOpen
                                     type="date"
                                     fullWidth
                                     value={salary.sal_joindate}
-                                    onChange={handleSalaryChange}
+                                    onChange={(event) => handleSalaryChange(event, /^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/)}
                                     inputProps={{ maxLength: 20 }}
                                 />
                             </GridInnerItem>
@@ -263,8 +266,7 @@ export default function EditEmployee({ row, bankList, closeModal, setSuccessOpen
                                     label="Amount"
                                     fullWidth
                                     value={salary.sal_amount}
-                                    onChange={handleSalaryChange}
-                                    inputProps={{ maxLength: 20 }}
+                                    onChange={(event) => handleSalaryChange(event, /^\d{0,9}$/)}
                                 />
                             </GridInnerItem>
                             <GridPlusIcon item xs={1}>
@@ -281,10 +283,12 @@ export default function EditEmployee({ row, bankList, closeModal, setSuccessOpen
                             <GridInnerItem strong="true" item xs={3}>Add On</GridInnerItem>
                             <GridInnerItem strong="true" item xs={1}>Action</GridInnerItem>
                             {salaryArray.map((each, index) => (
-                                <>
+                                <React.Fragment
+                                    key={index}
+                                >
                                     <GridInnerItem item xs={2}>{index + 1}</GridInnerItem>
                                     <GridInnerItem item xs={3}>{each.sal_joindate.split(' ')[0]}</GridInnerItem>
-                                    <GridInnerItem item xs={3}>{each.sal_amount}</GridInnerItem>
+                                    <GridInnerItem item xs={3}>{numberWithCommas(each.sal_amount)}</GridInnerItem>
                                     <GridInnerItem item xs={3}>{each.sal_date}</GridInnerItem>
                                     <GridMinusIcon item xs={1}>
                                         <Tooltip title="Delete Salary">
@@ -293,7 +297,7 @@ export default function EditEmployee({ row, bankList, closeModal, setSuccessOpen
                                             </IconButton>
                                         </Tooltip>
                                     </GridMinusIcon>
-                                </>
+                                </React.Fragment>
                             ))}
 
                         </GridInnerContainer>
