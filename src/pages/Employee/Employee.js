@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -9,9 +10,9 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
-import Pagination from '@mui/material/Pagination';
 import Button from "@mui/material/Button";
 import {Modal, Snackbar, Alert} from "@mui/material";
+import { Pagination, PaginationItem } from "@mui/material";
 
 import styled from 'styled-components';
 
@@ -29,6 +30,10 @@ const URL = baseURL + path;
 const pageCount = 10;
 
 export default function Employee() {
+    const location = useLocation();
+    const navigate = useNavigate();
+    const pageIndex = Number(location.pathname.split('/').pop());
+
     const [rows, setRows] = useState([]);
     const [bankList, setBankList] = useState([]);
     const [currPage, setCurrPage] = useState(1);
@@ -105,9 +110,9 @@ export default function Employee() {
     }
 
     const init = () => {
-        if (rows.length === 0) {
-            getData(URL, 1);
-            setCurrPage(1);
+        if (rows.length === 0 && currPage >= 2) {
+            navigate(`/employee/${currPage - 1}`);
+            getData(URL, currPage - 1);
         } else {
             getData(URL, currPage);
         }
@@ -118,7 +123,7 @@ export default function Employee() {
         }, [
             successOpen,
             maxPage,
-
+            currPage
         ]
     );
 
@@ -180,7 +185,20 @@ export default function Employee() {
                     </Table>
                 </TableContainer>
 
-                <StyledPagination count={maxPage} onChange={handlePagi} page={currPage} color="primary" />
+                <StyledPagination
+                    count={maxPage}
+                    onChange={handlePagi}
+                    siblingCount={3}
+                    page={currPage}
+                    color="primary"
+                    renderItem={(item) => (
+                        <PaginationItem
+                            component={Link}
+                            to={`/employee/${item.page}`}
+                            {...item}
+                        />
+                    )}
+                />
 
             </InnerContainer>
 

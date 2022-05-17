@@ -146,7 +146,7 @@ export default function SideDrawer() {
                                 <ListItemText primary="Home" />
                             </ListItem>
                         </Link>
-                        <Link className="link" to="/company">
+                        <Link className="link" to="/company/1">
                             <ListItem button divider>
                                 <ListItemText primary="Manage Company" />
                             </ListItem>
@@ -156,12 +156,12 @@ export default function SideDrawer() {
                                 <ListItemText primary="Manage Company Account" />
                             </ListItem>
                         </Link>
-                        <Link className="link" to="/employee">
+                        <Link className="link" to="/employee/1">
                             <ListItem button divider>
                                 <ListItemText primary="Manage Employee" />
                             </ListItem>
                         </Link>
-                        <Link className="link" to="/medicine">
+                        <Link className="link" to="/medicine/1">
                             <ListItem button divider>
                                 <ListItemText primary="Manage Medicine" />
                             </ListItem>
@@ -181,14 +181,14 @@ export default function SideDrawer() {
             <Main open={open} sx={{width: '100%'}}>
                 <DrawerHeader />
                     <Routes>
-                        <Route className="" path="/" element={<Home/>} />
-                        <Route className="" path="/company" element={<Company/>} />
-                        <Route className="" path="/companyAccount" element={<CompanyAccount/>} />
-                        <Route className="" path="/employee" element={<Employee/>} />
-                        <Route className="" path="/medicine" element={<Medicine/>} />
-                        <Route className="" path="/bill" element={<Bill/>} />
-                        <Route className="" path="/customerRequest" element={<Request/>} />
-                        <Route className="" path="/myPage" element={<MyPage/>} />
+                        <Route exact path="/" element={<Home/>} />
+                        <Route path="/company/:id" element={<Company/>} />
+                        <Route path="/companyAccount" element={<CompanyAccount/>} />
+                        <Route path="/employee/:id" element={<Employee/>} />
+                        <Route path="/medicine/:id" element={<Medicine/>} />
+                        <Route path="/bill" element={<Bill/>} />
+                        <Route path="/customerRequest" element={<Request/>} />
+                        <Route path="/myPage" element={<MyPage/>} />
                     </Routes>
             </Main>
         </Box>
