@@ -14,6 +14,7 @@ import {
     GridInnerContainer,
     GridInnerItem
 } from '../../styles/Modal';
+import {numberWithCommas} from "../../utils/functions";
 
 const flexName = 4;
 const flexContent = 12 - flexName;
@@ -59,12 +60,14 @@ export default function ViewEmployee({ row, setModalState, closeModal }) {
                                 <GridInnerItem strong="true" item xs={3}>Add On</GridInnerItem>
 
                                 {row.emp_salary.map((each, index) => (
-                                    <>
+                                    <React.Fragment
+                                        key={each.sal_uid}
+                                    >
                                         <GridInnerItem item xs={3}>{index + 1}</GridInnerItem>
                                         <GridInnerItem item xs={3}>{each.sal_joindate.split(' ')[0]}</GridInnerItem>
-                                        <GridInnerItem item xs={3}>{each.sal_amount}</GridInnerItem>
+                                        <GridInnerItem item xs={3}>{numberWithCommas(each.sal_amount)}</GridInnerItem>
                                         <GridInnerItem item xs={3}>{each.sal_date}</GridInnerItem>
-                                    </>
+                                    </React.Fragment>
                                 ))}
                             </GridInnerContainer>
                         </>

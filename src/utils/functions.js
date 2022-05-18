@@ -25,8 +25,13 @@ const checkValidation = (id, value) => {
     return regex.test(value);
 }
 
+const numberWithCommas = (num) => {
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
 export {
     findBankIndex,
     generateDate,
     checkValidation,
+    numberWithCommas,
 }

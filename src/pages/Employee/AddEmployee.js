@@ -37,7 +37,7 @@ const flexContent = 12 - flexName;
 export default function AddEmployee({ bankList, closeModal, setSuccessOpen, setErrorOpen }) {
     const [select, setSelect] = useState("");
     const [inputs, setInputs] = useState({
-        "emp_joindate": generateDate(),
+        "emp_added_on": generateDate(),
     });
 
     const handleSelect = (event) => {

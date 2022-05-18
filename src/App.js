@@ -1,10 +1,14 @@
 import './App.css';
-import Header from './components/Header'
-import SideMenuBar from "./components/SideMenuBar";
+import { BrowserRouter } from "react-router-dom";
+
 import GlobalStyle from './components/GlobalStyle'
 
 import Login from './pages/Login/Login'
 import {useEffect, useState} from 'react';
+
+
+import SideDrawer from "./components/SideDrawer";
+
 
 import axios from "axios";
 
@@ -17,6 +21,7 @@ const getLoginSession = () => {
     return value;
 }
 
+
 function App() {
     const [login, setLogin] = useState(getLoginSession());
 
@@ -24,21 +29,21 @@ function App() {
     <>
         {login ? (
               <>
-                  <GlobalStyle />
-                  <Header />
+              <GlobalStyle />
+              <BrowserRouter>
+                  {/*<Header />*/}
                   <div className="container">
-                      <SideMenuBar />
+                    <SideDrawer />
+                      {/*<SideMenuBar />*/}
                   </div>
+              </BrowserRouter>
               </>
         ) : (
             <Login
                 setLogin = {setLogin}
             />
         )}
-
-
-
-    </>
+            </>
   );
 }
 
