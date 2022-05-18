@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
     Paper,
     TextField,
@@ -21,15 +21,24 @@ import Register from '../../pages/Login/Register';
 const path = 'user/signin/';
 const URL = baseURL + path;
 
+const checkEmailExist = () => {
+    if (localStorage.getItem("email") === null) {
+        return false
+    } else {
+        return true
+    }
+}
+
 export default function Login( { setLogin } ) {
     const [inputs, setInputs] = useState({
-        user_email: '',
+        user_email: localStorage.getItem('email'),
         user_pw: ''
     })
+    const [saveID, setSaveID] = useState(checkEmailExist())
 
     const [successOpen, setSuccessOpen] = useState(false);
     const [errorOpen, setErrorOpen] = useState(false);
-    const [errorMessage, setErrorMessage] = useState('error');
+    const errorMessage = useRef('error');
 
     const [modalState, setModalState] = useState('register');
     const [modalOpen, setModalOpen] = useState(false);
@@ -70,16 +79,36 @@ export default function Login( { setLogin } ) {
     const handleSubmit = async (event) => {
         event.preventDefault();
         try{
+            console.log(inputs)
             const response = await axios.post(URL, inputs)
-            const resData = response.data;
-            console.log(resData);
-            setLogin(true);
-            setLoginSession(true);
+            if (response.status) {
+                setLogin(true);
+                setLoginSession(true);
+                saveID ?
+                    localStorage.setItem('email', inputs.user_email) :
+                    localStorage.clear();
+            }
 
         } catch (error) {
-            console.log(error);
+            const { status, data } = error.response;
+            if (status === 401){
+                const timeArray = data.useTime.split(/[-\s:]/).map(x => {
+                    return parseInt(x, 10);
+                });
+                errorMessage.current = `비밀번호를 5회 이상 틀렸습니다. ${timeArray[3]}시 ${timeArray[4]}분 ${timeArray[5]}초 이후에 다시 시도해 주십시오.`;
+            } else if (status === 404) {
+                errorMessage.current = '이메일 또는 비밀번호가 틀렸습니다.'
+            } else {
+                data.message ?
+                errorMessage.current = data.message:
+                errorMessage.current = '오류가 발생했습니다.'
+            }
             setErrorOpen(true);
         }
+    }
+
+    const handleCheck = (event) => {
+        event.target.checked ? setSaveID(true) : setSaveID(false);
     }
 
     const handleToastClose = (event, reason) => {
@@ -111,6 +140,7 @@ export default function Login( { setLogin } ) {
                                     fullWidth
                                     label="E-Mail"
                                     variant="outlined"
+                                    value={inputs.user_email}
                                     required
                                     onChange={handleChange}
                                     inputProps={{ maxLength: 64 }}
@@ -130,7 +160,7 @@ export default function Login( { setLogin } ) {
                             </Grid>
                             <Grid item xs={12}>
                                 <FormGroup>
-                                    <FormControlLabel control={<Checkbox />} label="로그인 상태 유지" />
+                                    <FormControlLabel control={<Checkbox onChange={handleCheck} checked={saveID}/>} label="아이디 저장" />
                                 </FormGroup>
                             </Grid>
                             <Grid item xs={12}>
@@ -165,7 +195,7 @@ export default function Login( { setLogin } ) {
             <Stack spacing={2} sx={{ width: '100%' }}>
                 <Snackbar anchorOrigin={{ vertical: 'top', horizontal: 'center' }} open={errorOpen} autoHideDuration={3000} onClose={handleToastClose}>
                     <Alert onClose={handleToastClose} severity="error" sx={{ width: '100%' }}>
-                        {errorMessage}
+                        {errorMessage.current}
                     </Alert>
                 </Snackbar>
                 <Snackbar anchorOrigin={{ vertical: 'top', horizontal: 'center' }} open={successOpen} autoHideDuration={3000} onClose={handleToastClose}>
