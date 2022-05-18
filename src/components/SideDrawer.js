@@ -1,8 +1,10 @@
-import * as React from 'react';
+import React, {useEffect, useState, useContext } from 'react';
 
 import {Link, Route, Routes} from "react-router-dom";
 import {useNavigate} from "react-router";
+import axios from "axios";
 
+import {baseURL} from "../variables/baseURL";
 import Home from "../pages/Home/Home";
 import Company from "../pages/Company/Company";
 import CompanyAccount from "../pages/CompanyAccount/CompanyAccount";
@@ -10,7 +12,7 @@ import Employee from "../pages/Employee/Employee";
 import Medicine from "../pages/Medicine/Medicine";
 import Bill from "../pages/Bill/Bill";
 import Request from '../pages/Request/Request';
-import MyPage from "../pages/MyPage/MyPage";
+import MyPage2 from "../pages/MyPage/MyPage2";
 
 import { styled, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
@@ -34,9 +36,31 @@ import Menu from '@mui/material/Menu';
 
 
 
+export const HomeContext = React.createContext(null);
+
 export default function SideDrawer() {
     const [auth, setAuth] = React.useState(true);
     const [anchorEl, setAnchorEl] = React.useState(null);
+
+    const [homeData, setHomeData] = useState(null);
+
+    const path = "user"
+    const URL = baseURL + path;
+    // console.log('URL', URL)
+
+    const getData = async () => {
+        try {
+            const response = await axios.get(URL,
+                {
+                    withCredentials: true
+                })
+
+            console.log('data', response.data)
+            setHomeData(response.data)
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     const navigate = useNavigate()
 
@@ -66,6 +90,11 @@ export default function SideDrawer() {
     const handleClose = () => {
         setAnchorEl(null);
     };
+
+    useEffect(() => {
+        getData();
+        // console.log('homeData', homeData)
+    }, [])
 
     return (
         <Box sx={{ display: 'flex' }}>
@@ -180,6 +209,7 @@ export default function SideDrawer() {
             </Drawer>
             <Main open={open} sx={{width: '100%'}}>
                 <DrawerHeader />
+                <HomeContext.Provider value={{homeData}}>
                     <Routes>
                         <Route className="" path="/" element={<Home/>} />
                         <Route className="" path="/company" element={<Company/>} />
@@ -188,14 +218,15 @@ export default function SideDrawer() {
                         <Route className="" path="/medicine" element={<Medicine/>} />
                         <Route className="" path="/bill" element={<Bill/>} />
                         <Route className="" path="/customerRequest" element={<Request/>} />
-                        <Route className="" path="/myPage" element={<MyPage/>} />
+                        <Route className="" path="/myPage" element={<MyPage2/>} />
                     </Routes>
+                </HomeContext.Provider>
             </Main>
         </Box>
     );
 }
 
-const drawerWidth = 240;
+const drawerWidth = 250;
 
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
     ({ theme, open }) => ({
@@ -210,7 +241,6 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
             transition: theme.transitions.create('margin', {
                 easing: theme.transitions.easing.easeOut,
                 duration: theme.transitions.duration.enteringScreen,
-
             }),
             marginLeft: 0,
         }),
@@ -237,7 +267,7 @@ const AppBar = styled(MuiAppBar, {
 const DrawerHeader = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
-    padding: theme.spacing(0, 1),
+    // padding: theme.spacing(0, 1),
     // necessary for content to be below app bar
     ...theme.mixins.toolbar,
     justifyContent: 'flex-end',

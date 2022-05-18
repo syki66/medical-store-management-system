@@ -1,4 +1,7 @@
-import React, {useEffect} from "react";
+import React, {useContext, useEffect} from "react";
+import {HomeContext} from "../../components/SideDrawer";
+
+import styled from 'styled-components'
 import {
     LineChart,
     Line,
@@ -7,12 +10,10 @@ import {
     CartesianGrid,
     Tooltip,
 } from "recharts";
-import styled from 'styled-components'
 
-export default function SellChart(getHomeData) {
-// useEffect(() => {
-//     console.log('getHomeData', getHomeData.getHomeData[0].bill_total_sell)
-// })
+export default function SellChart() {
+    const { homeData } = useContext(HomeContext)
+
     return (
         <SellChartDiv>
             <ChartTitle>
@@ -20,9 +21,9 @@ export default function SellChart(getHomeData) {
             </ChartTitle>
             <div>
                 <LineChart
-                    width={500}
+                    width={620}
                     height={300}
-                    data={getHomeData.getHomeData.bill_total_sell}
+                    data={homeData.bill_total_sell}
                     margin={{
                         top: 5,
                         right: 20,

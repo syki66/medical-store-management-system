@@ -1,115 +1,27 @@
-import React, {useEffect, useState} from 'react';
-import axios from "axios";
+import React, {useContext, useEffect, useState} from 'react';
 
+import {HomeContext} from "../../components/SideDrawer";
 import ProfitChart from "./ProfitChart";
 import SellChart from "./SellChart";
 
 import styled from "styled-components";
+
 import { Paper } from '@mui/material';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 
+
+
 export default function Home() {
-    const [getHomeData, setGetHomeData] = useState({
-        "user_uid": 1,
-        "user_storename": "씨엔알약국",
-        "user_email": "baek1008@asd.com",
-        "user_totalreqs": 100,
-        "total_medicine" : 300,
-        "user_completedreq": 50,
-        "user_pendingreq": 5,
-        "user_employee": 900,
-        "user_company": 104,
-        "bill_profit": [
-            {
-                date: "2022-03-05",
-                won: 100000
-            },
-            {
-                date: "2022-03-06",
-                won: 160000
-            },
-            {
-                date: "2022-03-07",
-                won: 800000
-            },
-            {
-                date: "2022-03-08",
-                won: 200000
-            },
-            {
-                date: "2022-03-09",
-                won: 330000
-            },
-            {
-                date: "2022-03-10",
-                won: 360000
-            }
-            ,
-            {
-                date: "2022-03-11",
-                won: 30000
-            }
-        ],
-        "bill_total_sell": [
-            {
-                date: "2022-03-05",
-                won: 100000
-            },
-            {
-                date: "2022-03-06",
-                won: 160000
-            },
-            {
-                date: "2022-03-07",
-                won: 800000
-            },
-            {
-                date: "2022-03-08",
-                won: 200000
-            },
-            {
-                date: "2022-03-09",
-                won: 330000
-            },
-            {
-                date: "2022-03-10",
-                won: 360000
-            }
-            ,
-            {
-                date: "2022-03-11",
-                won: 30000
-            }
-        ]
-    })
 
-    const URL = 'http://localhost:8000/'
-    // const URL = 'http://3.34.144.222:8000/'
-    // const URL = 'http://3.36.26.172:8000/'
+    const { homeData } = useContext(HomeContext)
 
-    const getData = async () => {
-        try {
-            // const response = await axios.get(URL + 'user',
-            const response = await axios.get(URL + 'medicine?page=1',
-                {
-                    withCredentials: true
-                })
-            console.log('user', response.data)
-            // setGetHomeData(response)
-            // setGetHomeData(response.data)
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
-    useEffect(() => {
-        // getData()
-        // console.log('getHomeData', getHomeData)
-    }, [])
+    // useEffect(() => {
+    //     console.log('Home page homeData', homeData)
+    // }, [])
 
     return (
         <>
-            <PageContainer>
+            {homeData && <PageContainer>
                 <div className={'first'}>
                     <div className='titleCon'>
                         <h3>Dashboard</h3>
@@ -122,7 +34,7 @@ export default function Home() {
                                 </div>
                                 <div className={'detail fD'}>
                                     <h5>TOTAL REQUEST</h5>
-                                    <p>{getHomeData.user_totalreqs}</p>
+                                    <p>{homeData.user_totalreqs}</p>
                                 </div>
                             </Paper>
                             <Paper className={'indiBoard'} elevation={3}>
@@ -131,7 +43,7 @@ export default function Home() {
                                 </div>
                                 <div className={'detail fD'}>
                                     <h5>TOTAL MEDICINE</h5>
-                                    <p>{getHomeData.total_medicine}</p>
+                                    <p>{homeData.total_medicine}</p>
                                 </div>
                             </Paper>
                         </div>
@@ -143,7 +55,7 @@ export default function Home() {
                                 </div>
                                 <div className={'detail sD'}>
                                     <h5>COMPLETED REQUEST</h5>
-                                    <p>{getHomeData.user_completedreq}</p>
+                                    <p>{homeData.user_completedreq}</p>
                                 </div>
                             </Paper>
                             <Paper className={'indiBoard'} elevation={3}>
@@ -153,7 +65,7 @@ export default function Home() {
                                 </div>
                                 <div className={'detail sD'}>
                                     <h5>PENDING REQUEST</h5>
-                                    <p>{getHomeData.pendingreq}</p>
+                                    <p>{homeData.user_pendingreq}</p>
                                 </div>
                             </Paper>
                         </div>
@@ -166,7 +78,7 @@ export default function Home() {
                                 </div>
                                 <div className={'detail tD'}>
                                     <h5>TOTAL EMPLOYEE</h5>
-                                    <p>{getHomeData.user_employee}</p>
+                                    <p>{homeData.total_employee}</p>
                                 </div>
                             </Paper>
 
@@ -176,21 +88,19 @@ export default function Home() {
                                 </div>
                                 <div className={'detail tD'}>
                                     <h5>TOTAL COMPANY</h5>
-                                    <p>{getHomeData.user_company}</p>
+                                    <p>{homeData.total_company}</p>
                                 </div>
                             </Paper>
                         </div>
                     </div>
                 </div>
                 <div className={'second'}>
-                    {getHomeData && (
                         <>
-                        <ProfitChart getHomeData={getHomeData}/>
-                        <SellChart getHomeData={getHomeData}/>
-                        </>)
-                    }
+                            <ProfitChart />
+                            <SellChart />
+                        </>
                 </div>
-            </PageContainer>
+            </PageContainer>}
         </>
     )
 }
@@ -201,7 +111,7 @@ const PageContainer = styled.div`
       width: 100%;
       .second {
         display: flex;
-        justify-content: space-between;
+        justify-content: center;
         width: 100%;
         margin-top: 3em;
       }
