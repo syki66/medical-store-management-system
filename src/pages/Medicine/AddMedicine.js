@@ -149,7 +149,7 @@ export default function AddMedicine({ companyList, closeModal, setSuccessOpen, s
                                 size="small"
                                 fullWidth
                                 onChange={handleChange}
-                                inputProps={{ maxLength: 50 }}
+                                inputProps={{ maxLength: 10 }}
                             />
                         </GridContent>
                         <GridName item xs={flexName}>
@@ -163,7 +163,7 @@ export default function AddMedicine({ companyList, closeModal, setSuccessOpen, s
                                 size="small"
                                 fullWidth
                                 onChange={handleChange}
-                                inputProps={{ maxLength: 15 }}
+                                inputProps={{ maxLength: 10 }}
                             />
                         </GridContent>
                         <GridName item xs={flexName}>
@@ -302,7 +302,7 @@ export default function AddMedicine({ companyList, closeModal, setSuccessOpen, s
                                     fullWidth
                                     value={salt.salt_name}
                                     onChange={handleDetailChange}
-                                    inputProps={{ maxLength: 20 }}
+                                    inputProps={{ maxLength: 10 }}
                                 />
                             </GridInnerItem>
                             <GridInnerItem item xs={0.2} />
@@ -314,7 +314,6 @@ export default function AddMedicine({ companyList, closeModal, setSuccessOpen, s
                                     fullWidth
                                     value={salt.salt_qty}
                                     onChange={(event) => handleDetailChange(event, /^\d{0,2}$/)}
-                                    inputProps={{ maxLength: 20 }}
                                 />
                             </GridInnerItem>
                             <GridInnerItem item xs={0.2} />
@@ -326,7 +325,7 @@ export default function AddMedicine({ companyList, closeModal, setSuccessOpen, s
                                     fullWidth
                                     value={salt.salt_qty_type}
                                     onChange={handleDetailChange}
-                                    inputProps={{ maxLength: 20 }}
+                                    inputProps={{ maxLength: 10 }}
                                 />
                             </GridInnerItem>
                             <GridInnerItem item xs={0.2} />
@@ -338,7 +337,7 @@ export default function AddMedicine({ companyList, closeModal, setSuccessOpen, s
                                     fullWidth
                                     value={salt.salt_desc}
                                     onChange={handleDetailChange}
-                                    inputProps={{ maxLength: 20 }}
+                                    inputProps={{ maxLength: 10 }}
                                 />
                             </GridInnerItem>
                             <GridPlusIcon item xs={1}>

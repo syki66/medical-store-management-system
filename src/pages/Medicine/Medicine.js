@@ -38,7 +38,7 @@ export default function Medicine() {
     const [rows, setRows] = useState([]);
     const [companyList, setCompanyList] = useState([]);
     const [currPage, setCurrPage] = useState(pageIndex);
-    const [maxPage, setMaxPage] = useState(10);
+    const [maxPage, setMaxPage] = useState(currPage);
 
     const [loading, setLoading] = useState(true);
 
@@ -112,7 +112,7 @@ export default function Medicine() {
     }
 
     const init = () => {
-        if (rows.length === 0 && currPage >= 2) {
+        if (maxPage !== currPage && currPage >= 2) {
             navigate(`/medicine/${currPage - 1}`);
             getData(URL, currPage - 1);
         } else {

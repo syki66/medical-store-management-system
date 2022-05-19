@@ -38,7 +38,7 @@ export default function Login( { setLogin } ) {
 
     const [successOpen, setSuccessOpen] = useState(false);
     const [errorOpen, setErrorOpen] = useState(false);
-    const errorMessage = useRef('error');
+    const errorMessage = useRef('오류가 발생하였습니다.');
 
     const [modalState, setModalState] = useState('register');
     const [modalOpen, setModalOpen] = useState(false);
