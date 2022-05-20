@@ -1,98 +1,23 @@
 import React, {useEffect, useState, useRef, useCallback} from 'react';
 import axios from 'axios';
-import TextField from '@material-ui/core/TextField';
-import styled from 'styled-components'
-import Button from '@mui/material/Button';
-import AddCircleIcon from '@mui/icons-material/AddCircle';
-import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
-import Container from '@mui/material/Container';
 
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import Modal from '@mui/material/Modal';
 import DetailItem from "./DetailItem";
 import BillModal from "./BillModal";
-
 import { generateDate } from "../../utils/functions"
 
+import styled from 'styled-components'
 
-const URL = "http://localhost:8000/";
+import TextField from '@material-ui/core/TextField';
+import Button from '@mui/material/Button';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+
+import { baseURL } from '../../variables/baseURL'
+
+const path = "medicine?page=1"
+const URL = baseURL + path;
 
 export default function Bill() {
-    const [medList, setMedList] = useState([
-        {
-            "med_uid": 1,
-            "med_name": "게보린",
-            "med_type": "tablet",
-            "med_buyprice": 2500,
-            "med_sellprice": 4500,
-            "med_cgst": 15,
-            "med_sgst": 20,
-            "med_expire": "2022-01-12",
-            "med_mfg": "2020-04-22",
-            "med_desc": "두통,치통,생리통",
-            "med_instock": 250,
-            "med_qty": 5,
-            "med_company": "OO제약",
-            "med_salt": [
-                {
-                    "salt_uid": 1,
-                    "salt_name": "약1",
-                    "salt_qty": 10,
-                    "salt_qty_tyep": "tablet",
-                    "salt_desc": "항생제"
-                }
-            ]
-        },
-        {
-            "med_uid": 2,
-            "med_name": "박카스",
-            "med_type": "tablet",
-            "med_buyprice": 2500,
-            "med_sellprice": 4500,
-            "med_cgst": 15,
-            "med_sgst": 20,
-            "med_expire": "2022-01-12",
-            "med_mfg": "2020-04-22",
-            "med_desc": "두통,치통,생리통",
-            "med_instock": 250,
-            "med_qty": 5,
-            "med_company": "OO제약",
-            "med_salt": [
-                {
-                    "salt_uid": 1,
-                    "salt_name": "약1",
-                    "salt_qty": 10,
-                    "salt_qty_tyep": "tablet",
-                    "salt_desc": "항생제"
-                }
-            ]
-        },
-        {
-            "med_uid": 3,
-            "med_name": "타이레놀",
-            "med_type": "tablet",
-            "med_buyprice": 2500,
-            "med_sellprice": 4500,
-            "med_cgst": 15,
-            "med_sgst": 20,
-            "med_expire": "2022-01-12",
-            "med_mfg": "2020-04-22",
-            "med_desc": "두통,치통,생리통",
-            "med_instock": 250,
-            "med_qty": 5,
-            "med_company": "OO제약",
-            "med_salt": [
-                {
-                    "salt_uid": 1,
-                    "salt_name": "약1",
-                    "salt_qty": 10,
-                    "salt_qty_tyep": "tablet",
-                    "salt_desc": "항생제"
-                }
-            ]
-        }]);
-
+    const [medList, setMedList] = useState([]);
     const [detailList, setDetailList] = useState([{
         id: 0,
         sr_no : '',
@@ -119,6 +44,16 @@ export default function Bill() {
         phone: phoneRef,
     });
 
+    const getMedList = async () => {
+        try {
+            const response = await axios.get(URL)
+            // console.log('medicine response', response)
+            setMedList(response.data.medicine_list)
+            // console.log('medicine list response ', response.data.medicine_list)
+        } catch (error) {
+            console.log(error)
+        }
+    };
 
     // Add medicine detail
     const clickAdd = useCallback(() => {
@@ -169,45 +104,30 @@ export default function Bill() {
 
 
     // Generate bill (post bill request)
-    const onSubmit = (e) => {
+    const handleSubmit = async(e) => {
         e.preventDefault();
         handleOpen();
 
-        console.log('postbill',
-            {
-                "joindate": generateDate(),
-                "med_list" : detailList.map((detailItem) => {
-                    return (
-                        {
-                            "med_uid": detailItem.med_uid,
-                            "detail_amount": detailItem.detail_amount
-                        }
-                    )
-                }),
-            }
-        )
-
-        // try {
-        //     // const response = await axios.post(URL + 'user',
-        //     const response = await axios.post(URL + 'customer/bill',
-        //         {
-        //                 "joindate": generateDate(),
-        //                 "med_list" : detailList.map((detailItem) => {
-        //                     return (
-        //                         {
-        //                             "med_uid": detailItem.med_uid,
-        //                             "detail_amount": detailItem.detail_amount
-        //                         }
-        //                     )
-        //                 }),
-        //             }
-        //      )
-        //     console.log('response', response.data)
-        // } catch (error) {
-        //     console.log(error)
-        // }
+        console.log('submit url', baseURL + 'customer/bill')
+        try {
+            const response = await axios.post(baseURL + 'customer/bill',
+                {
+                        "joindate": generateDate(),
+                        "med_list" : detailList.map((detailItem, idx) => {
+                            return (
+                                {
+                                    "med_uid": detailItem.med_uid,
+                                    "detail_amount": parseInt(detailItem.detail_amount)
+                                }
+                            )
+                        }),
+                    }
+             )
+            console.log('성공response', response)
+        } catch (error) {
+            console.log(error)
+        }
     }
-
 
     // Detail item 컴포넌트 뿌려주는 함수
     const getDetailListComp = useCallback(() => {
@@ -225,27 +145,16 @@ export default function Bill() {
         })
     }, [detailList, handleChange, handleDelete]);
 
-    // const getMedList = async () => {
-    //     try {
-    //         // const response = await axios.get(URL + 'user',
-    //         const response = await axios.get(URL + 'medicine?page=1')
-    //         setMedList(response.data.medicine_list)
-    //         console.log('response', response.data.medicine_list)
-    //     } catch (error) {
-    //         console.log(error)
-    //     }
-    // };
-
     useEffect(() => {
-        // getMedList();
-    }, [medList]);
+        getMedList();
+    }, []);
 
     // ----------------------------------------------------------
 
     return (
         <>
             <PageContainer>
-                <form noValidate autoComplete="off" >
+                <form onSubmit={handleSubmit} autoComplete="off" >
                     <BillContainer>
                         <div className='first'>
                             <div>
@@ -300,7 +209,6 @@ export default function Bill() {
                         </div>
                         <div className='submitBtnCon'>
                             <Button
-                                onClick={onSubmit}
                                 type='submit'
                                 className='submitBtn'
                                 fullWidth='true'
@@ -322,46 +230,6 @@ export default function Bill() {
         </>
     )
 }
-
-
-const styles = theme => ({
-    container: {
-        display: 'flex',
-        flexWrap: 'wrap',
-    },
-    textField: {
-        marginLeft: theme.spacing.unit,
-        marginRight: theme.spacing.unit,
-        width: 200,
-    },
-    dense: {
-        marginTop: 19,
-    },
-    menu: {
-        width: 200,
-    },
-});
-
-const currencies = [
-    {
-        value: 'USD',
-        label: '$',
-    },
-    {
-        value: 'EUR',
-        label: '€',
-    },
-    {
-        value: 'BTC',
-        label: '฿',
-    },
-    {
-        value: 'JPY',
-        label: '¥',
-    },
-];
-
-
 
 const PageContainer = styled.div`
   padding: 1em;

@@ -25,6 +25,10 @@ export default function PrintBill({formRef, detailList, medList}) {
 
     const totalPrice = totalAdd(detailList);
 
+    useEffect(() => {
+        console.log('detailList', detailList)
+    },[])
+
     return(
         <>
             <TableContainer component={Paper}>
@@ -74,12 +78,12 @@ export default function PrintBill({formRef, detailList, medList}) {
                     </TableHead>
                     <TableBody>
                         {detailList.map((detailItem, idx) => (
-                            <TableRow key={detailItem.idx}>
+                            <TableRow key={detailItem.med_uid}>
                                 <TableCell align="left">{detailItem.sr_no}</TableCell>
                                 {
-                                    medList.map((medItem) => {
+                                    medList.map((medItem, idx) => {
                                         if(medItem.med_uid == detailItem.med_uid) {
-                                            return <TableCell align="left">{medItem.med_name}</TableCell>
+                                            return <TableCell align="left" key={medItem.med_uid}>{medItem.med_name}</TableCell>
                                         }
                                     })
                                 }

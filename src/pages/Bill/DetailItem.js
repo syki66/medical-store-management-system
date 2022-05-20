@@ -5,7 +5,7 @@ import Box from '@mui/material/Box';
 
 const DETAIL_DEFINE = {
     SR_NO:"sr_no",
-    MED_NAME:"med_uid",
+    MED_UID:"med_uid",
     QTY:"qty",
     QTY_TYPE:"qty_type",
     PRICE:'price',
@@ -39,7 +39,6 @@ export default function DetailItem(props) {
                     margin-right='3px'
                     value={detailItem.sr_no}
                     style={{marginRight: 1 + 'em'}}
-                    required
                 />
                 <Box
                     component="form"
@@ -49,24 +48,30 @@ export default function DetailItem(props) {
                     noValidate
                     autoComplete="off"
                 >
-                <TextField
-                    required
-                    select
-                    label="Medicine Name"
-                    name={DETAIL_DEFINE.MED_NAME}
-                    value={select}
-                    // onChange={handleSelectChange}
-                    onChange={(e) => handleChange(e)}
-                    margin="normal"
-                    margin-right='3px'
-                    style={{marginRight: 1 + 'em'}}
-                >
-                    {props.medList.map((medicine, idx) => (
-                        <option key={idx} value={medicine.med_uid}>
-                            {medicine.med_name}
-                        </option>
-                    ))}
-                </TextField>
+
+                    {props.medList &&
+                        <TextField
+                        required
+                        select
+                        label="Medicine Name"
+                        name={DETAIL_DEFINE.MED_UID}
+                        onChange={(e) => handleChange(e)}
+                        margin="normal"
+                        margin-right='3px'
+                        style={{marginRight: 1 + 'em'}}
+                        defaultValue=""
+                        value={select}
+                    >
+                        {props.medList && props.medList.map((medicine, idx) => (
+                            <option key={idx} value={medicine.med_uid}>
+                                {medicine.med_name}
+                            </option>
+                        ))}
+                    </TextField>}
+
+
+
+
                 </Box>
                 <TextField
                     required
