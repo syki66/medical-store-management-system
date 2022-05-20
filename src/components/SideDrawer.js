@@ -175,7 +175,7 @@ export default function SideDrawer() {
                                 <ListItemText primary="Home" />
                             </ListItem>
                         </Link>
-                        <Link className="link" to="/company">
+                        <Link className="link" to="/company/1">
                             <ListItem button divider>
                                 <ListItemText primary="Manage Company" />
                             </ListItem>
@@ -185,12 +185,12 @@ export default function SideDrawer() {
                                 <ListItemText primary="Manage Company Account" />
                             </ListItem>
                         </Link>
-                        <Link className="link" to="/employee">
+                        <Link className="link" to="/employee/1">
                             <ListItem button divider>
                                 <ListItemText primary="Manage Employee" />
                             </ListItem>
                         </Link>
-                        <Link className="link" to="/medicine">
+                        <Link className="link" to="/medicine/1">
                             <ListItem button divider>
                                 <ListItemText primary="Manage Medicine" />
                             </ListItem>

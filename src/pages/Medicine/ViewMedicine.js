@@ -14,6 +14,7 @@ import {
     GridInnerContainer,
     GridInnerItem
 } from '../../styles/Modal';
+import {numberWithCommas} from "../../utils/functions";
 
 const flexName = 4;
 const flexContent = 12 - flexName;
@@ -49,7 +50,9 @@ export default function ViewMedicine({ row, setModalState, closeModal }) {
                     <GridName item xs={flexName}>Mfg Date</GridName>
                     <GridContent item xs={flexContent}>{row.med_mfg}</GridContent>
                     <GridName item xs={flexName}>Description</GridName>
-                    <GridContent item xs={flexContent}>{row.med_desc}</GridContent>
+                    <GridContent item xs={flexContent}>
+                        <GridDescription>{row.med_desc}</GridDescription>
+                    </GridContent>
                     <GridName item xs={flexName}>In Stock Total</GridName>
                     <GridContent item xs={flexContent}>{row.med_instock}</GridContent>
                     <GridName item xs={flexName}>Qty in Strip</GridName>
@@ -68,12 +71,14 @@ export default function ViewMedicine({ row, setModalState, closeModal }) {
                                 <GridInnerItem strong="true" item xs={3}>Salt Description</GridInnerItem>
 
                                 {row.med_salt.map((each, index) => (
-                                    <>
+                                    <React.Fragment
+                                        key={each.salt_uid}
+                                    >
                                         <GridInnerItem item xs={3}>{each.salt_name}</GridInnerItem>
-                                        <GridInnerItem item xs={3}>{each.salt_qty}</GridInnerItem>
+                                        <GridInnerItem item xs={3}>{numberWithCommas(each.salt_qty)}</GridInnerItem>
                                         <GridInnerItem item xs={3}>{each.salt_qty_type}</GridInnerItem>
                                         <GridInnerItem item xs={3}>{each.salt_desc}</GridInnerItem>
-                                    </>
+                                    </React.Fragment>
                                 ))}
                             </GridInnerContainer>
                         </>

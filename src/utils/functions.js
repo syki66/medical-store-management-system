@@ -17,7 +17,21 @@ const generateDate = () => {
     return `${year}-${month < 10 ? `0${month}` : month}-${date < 10 ? `0${date}` : date}`
 }
 
+const checkValidation = (id, value) => {
+    const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    const passwordRegex = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,16}$/;
+    const regex = id === "user_email" ? emailRegex : passwordRegex;
+
+    return regex.test(value);
+}
+
+const numberWithCommas = (num) => {
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
 export {
     findBankIndex,
     generateDate,
+    checkValidation,
+    numberWithCommas,
 }
