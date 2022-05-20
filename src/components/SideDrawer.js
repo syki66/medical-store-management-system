@@ -12,7 +12,7 @@ import Employee from "../pages/Employee/Employee";
 import Medicine from "../pages/Medicine/Medicine";
 import Bill from "../pages/Bill/Bill";
 import Request from '../pages/Request/Request';
-import MyPage2 from "../pages/MyPage/MyPage2";
+import MyPage from "../pages/MyPage/MyPage";
 
 import { styled, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
@@ -46,16 +46,10 @@ export default function SideDrawer() {
 
     const path = "user"
     const URL = baseURL + path;
-    // console.log('URL', URL)
 
     const getData = async () => {
         try {
-            const response = await axios.get(URL,
-                {
-                    withCredentials: true
-                })
-
-            console.log('data', response.data)
+            const response = await axios.get(URL)
             setHomeData(response.data)
         } catch (error) {
             console.log(error)
@@ -218,7 +212,7 @@ export default function SideDrawer() {
                         <Route className="" path="/medicine" element={<Medicine/>} />
                         <Route className="" path="/bill" element={<Bill/>} />
                         <Route className="" path="/customerRequest" element={<Request/>} />
-                        <Route className="" path="/myPage" element={<MyPage2/>} />
+                        <Route className="" path="/myPage" element={<MyPage/>} />
                     </Routes>
                 </HomeContext.Provider>
             </Main>
