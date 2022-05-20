@@ -17,7 +17,7 @@ export default function Loading() {
                 wait ? (
                     <></>
                 ) : (
-                    <StyledStack sx={{width: 1600}}>
+                    <StyledStack>
                         <SkeletonText variant="text" width='1' height={83}/>
                         <SkeletonContent variant="rectangular" width='1' height={694}/>
                         <SkeletonText variant="text" width='1' height={40}/>

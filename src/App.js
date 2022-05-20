@@ -1,7 +1,6 @@
-import './App.css';
 import { BrowserRouter } from "react-router-dom";
 
-import GlobalStyle from './components/GlobalStyle'
+import GlobalStyle from './components/GlobalStyle';
 
 import Login from './pages/Login/Login'
 import {useEffect, useState} from 'react';
