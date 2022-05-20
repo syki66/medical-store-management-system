@@ -1,4 +1,3 @@
-import './App.css';
 import { BrowserRouter } from "react-router-dom";
 
 import GlobalStyle from './components/GlobalStyle'

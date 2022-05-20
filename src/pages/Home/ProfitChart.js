@@ -1,4 +1,7 @@
-import React from "react";
+import React, {useContext} from "react";
+import {HomeContext} from "../../components/SideDrawer";
+
+import styled from "styled-components";
 import {
     LineChart,
     Line,
@@ -7,18 +10,19 @@ import {
     CartesianGrid,
     Tooltip,
 } from "recharts";
-import styled from "styled-components";
 
-export default function ProfitChart(getHomeData) {
+export default function ProfitChart() {
+    const { homeData } = useContext(HomeContext)
+
     return (
         <ProfitChartDiv>
             <ChartTitle>
                 <h3>Total Profit Chart of Medicine</h3>
             </ChartTitle>
             <LineChart
-                width={500}
+                width={620}
                 height={300}
-                data={getHomeData.getHomeData.bill_profit}
+                data={homeData.bill_profit}
                 margin={{
                     top: 5,
                     right: 30,
@@ -44,6 +48,8 @@ export default function ProfitChart(getHomeData) {
 const ProfitChartDiv = styled.div`
     display: flex;
     flex-direction: column;
+    //width: 100%;
+  margin-right: 3em;
 `
 
 const ChartTitle = styled.h3`
