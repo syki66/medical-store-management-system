@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
+import {Link, useLocation, useNavigate } from "react-router-dom";
 
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -9,15 +10,17 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
-import Pagination from '@mui/material/Pagination';
 import Button from "@mui/material/Button";
 import {Modal, Snackbar, Alert} from "@mui/material";
+import { Pagination, PaginationItem } from "@mui/material";
 
 import styled from 'styled-components';
 
 import AddCompany from './AddCompany';
 import EditCompany from './EditCompany';
 import ViewCompany from './ViewCompany';
+
+import Loading from './../../components/Loading'
 
 import Stack from "@mui/material/Stack";
 
@@ -29,11 +32,14 @@ const URL = baseURL + path;
 const pageCount = 10;
 
 export default function Company() {
-    console.log(baseURL)
+    const location = useLocation();
+    const navigate = useNavigate();
+    const pageIndex = Number(location.pathname.split('/').pop());
+
     const [rows, setRows] = useState([]);
     const [bankList, setBankList] = useState([]);
-    const [currPage, setCurrPage] = useState(1);
-    const [maxPage, setMaxPage] = useState(10);
+    const [currPage, setCurrPage] = useState(pageIndex);
+    const [maxPage, setMaxPage] = useState(currPage);
 
     const [loading, setLoading] = useState(true);
 
@@ -107,9 +113,9 @@ export default function Company() {
     }
 
     const init = () => {
-        if (rows.length === 0) {
-            getData(URL, 1);
-            setCurrPage(1);
+        if (maxPage !== currPage && currPage >= 2) {
+            navigate(`/company/${currPage - 1}`);
+            getData(URL, currPage - 1);
         } else {
             getData(URL, currPage);
         }
@@ -120,11 +126,12 @@ export default function Company() {
     }, [
         successOpen,
         maxPage,
+        currPage
         ]
     );
 
     if (loading) {
-        return null; // 로딩중 아이콘 넣기
+        return <Loading />
     }
 
     return (
@@ -185,7 +192,20 @@ export default function Company() {
                     </Table>
                 </TableContainer>
 
-                <StyledPagination count={maxPage} onChange={handlePagi} page={currPage} color="primary" />
+                <StyledPagination
+                    count={maxPage}
+                    onChange={handlePagi}
+                    siblingCount={3}
+                    page={currPage}
+                    color="primary"
+                    renderItem={(item) => (
+                        <PaginationItem
+                            component={Link}
+                            to={`/company/${item.page}`}
+                            {...item}
+                        />
+                    )}
+                />
                 
             </InnerContainer>
 

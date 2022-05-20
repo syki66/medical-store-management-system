@@ -21,7 +21,7 @@ import {
     GridInnerContainer,
 } from '../../styles/Modal';
 
-import { findBankIndex } from "../../utils/functions"
+import {findBankIndex, numberWithCommas} from "../../utils/functions"
 
 import axios from "axios";
 import { baseURL } from '../../variables/baseURL';
@@ -49,6 +49,7 @@ export default function EditMedicine({ row, companyList, closeModal, setSuccessO
         "med_qty": row.med_qty,
         "med_company": row.med_company,
         "med_salt": row.med_salt,
+
 
         // "bank_uid": select,
     });
@@ -79,7 +80,7 @@ export default function EditMedicine({ row, companyList, closeModal, setSuccessO
         inputs.current.med_salt = saltArray;
         console.log(inputs.current)
         try {
-            const res = await axios.patch(URL + row.med_uid, inputs);
+            const res = await axios.patch(URL + row.med_uid + '/', inputs.current);
             if (res.request.status) {
                 closeModal();
                 setSuccessOpen(true);
@@ -111,26 +112,31 @@ export default function EditMedicine({ row, companyList, closeModal, setSuccessO
     }
 
     const handleAddDetail = () => {
-        setSaltArray([salt, ...saltArray]);
-        setSalt({
-            ...salt,
-            "salt_name": "",
-            "salt_qty": "",
-            "salt_qty_type": "",
-            "salt_desc": "",
-        })
+        if (salt.salt_name !== '' && salt.salt_qty !== '' && salt.salt_qty_type !== '' && salt.salt_desc !== '') {
+            setSaltArray([salt, ...saltArray]);
+            setSalt({
+                ...salt,
+                "salt_name": "",
+                "salt_qty": "",
+                "salt_qty_type": "",
+                "salt_desc": "",
+            })
+        }
     }
 
     const handleDeleteDetail = (index) => {
         setSaltArray(saltArray.filter((v, i) => i != index))
     }
 
-    const handleDetailChange = (event) => {
-        const { id, value } = event.target;
-        setSalt({
-            ...salt,
-            [id]: value
-        })
+    const handleDetailChange = (event, regex) => {
+        let { id, value } = event.target;
+
+        if (!regex || regex.test(value)) {
+            setSalt({
+                ...salt,
+                [id]: value
+            })
+        }
     }
 
     return (
@@ -185,7 +191,7 @@ export default function EditMedicine({ row, companyList, closeModal, setSuccessO
                                 size="small"
                                 fullWidth
                                 onChange={handleChange}
-                                inputProps={{ maxLength: 50 }}
+                                inputProps={{ maxLength: 10 }}
                             />
                         </GridContent>
                         <GridName item xs={flexName}>
@@ -200,7 +206,7 @@ export default function EditMedicine({ row, companyList, closeModal, setSuccessO
                                 size="small"
                                 fullWidth
                                 onChange={handleChange}
-                                inputProps={{ maxLength: 15 }}
+                                inputProps={{ maxLength: 10 }}
                             />
                         </GridContent>
                         <GridName item xs={flexName}>
@@ -275,9 +281,11 @@ export default function EditMedicine({ row, companyList, closeModal, setSuccessO
                                 label="Required"
                                 defaultValue={row.med_desc}
                                 size="small"
+                                multiline
+                                rows={5}
                                 fullWidth
                                 onChange={handleChange}
-                                inputProps={{ maxLength: 20 }}
+                                inputProps={{ maxLength: 1000 }}
                             />
                         </GridContent>
                         <GridName item xs={flexName}>
@@ -346,7 +354,7 @@ export default function EditMedicine({ row, companyList, closeModal, setSuccessO
                                     fullWidth
                                     value={salt.salt_name}
                                     onChange={handleDetailChange}
-                                    inputProps={{ maxLength: 20 }}
+                                    inputProps={{ maxLength: 10 }}
                                 />
                             </GridInnerItem>
                             <GridInnerItem item xs={0.2} />
@@ -357,8 +365,7 @@ export default function EditMedicine({ row, companyList, closeModal, setSuccessO
                                     label="Salt Qty"
                                     fullWidth
                                     value={salt.salt_qty}
-                                    onChange={handleDetailChange}
-                                    inputProps={{ maxLength: 20 }}
+                                    onChange={(event) => handleDetailChange(event, /^\d{0,2}$/)}
                                 />
                             </GridInnerItem>
                             <GridInnerItem item xs={0.2} />
@@ -370,7 +377,7 @@ export default function EditMedicine({ row, companyList, closeModal, setSuccessO
                                     fullWidth
                                     value={salt.salt_qty_type}
                                     onChange={handleDetailChange}
-                                    inputProps={{ maxLength: 20 }}
+                                    inputProps={{ maxLength: 10 }}
                                 />
                             </GridInnerItem>
                             <GridInnerItem item xs={0.2} />
@@ -382,7 +389,7 @@ export default function EditMedicine({ row, companyList, closeModal, setSuccessO
                                     fullWidth
                                     value={salt.salt_desc}
                                     onChange={handleDetailChange}
-                                    inputProps={{ maxLength: 20 }}
+                                    inputProps={{ maxLength: 10 }}
                                 />
                             </GridInnerItem>
                             <GridPlusIcon item xs={1}>
@@ -399,9 +406,16 @@ export default function EditMedicine({ row, companyList, closeModal, setSuccessO
                             <GridInnerItem strong="true" item xs={3}>Salt Description</GridInnerItem>
                             <GridInnerItem strong="true" item xs={1}>Action</GridInnerItem>
                             {saltArray.map((each, index) => (
-                                <>
+                                <React.Fragment
+                                    key={index}
+                                >
                                     <GridInnerItem item xs={2}>{each.salt_name}</GridInnerItem>
-                                    <GridInnerItem item xs={3}>{each.salt_qty}</GridInnerItem>
+                                    <GridInnerItem item xs={3}>
+                                        {each.salt_qty.endsWith('.000') ?
+                                            numberWithCommas(each.salt_qty) :
+                                            numberWithCommas(each.salt_qty + '.000')
+                                        }
+                                    </GridInnerItem>
                                     <GridInnerItem item xs={3}>{each.salt_qty_type}</GridInnerItem>
                                     <GridInnerItem item xs={3}>{each.salt_desc}</GridInnerItem>
                                     <GridMinusIcon item xs={1}>
@@ -411,7 +425,7 @@ export default function EditMedicine({ row, companyList, closeModal, setSuccessO
                                             </IconButton>
                                         </Tooltip>
                                     </GridMinusIcon>
-                                </>
+                                </React.Fragment>
                             ))}
 
                         </GridInnerContainer>

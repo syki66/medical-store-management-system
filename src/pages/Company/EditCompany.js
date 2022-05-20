@@ -38,7 +38,7 @@ export default function EditCompany({ row, bankList, closeModal, setSuccessOpen,
         "com_description": row.com_description,
         "com_joindate": row.com_joindate,
         "com_account_no": row.com_account_no,
-        "bank_uid": select,
+        "bank_uid": select + 1,
     });
 
     const [confirmOpen, setConfirmOpen] = useState(false);
