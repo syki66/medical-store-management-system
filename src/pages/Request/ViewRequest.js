@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import {IconButton, Button, Tooltip} from "@mui/material";
 import ClearIcon from '@mui/icons-material/Clear';
@@ -35,12 +35,8 @@ export default function ViewRequest({ row, setModalState, closeModal, setSuccess
     const uid = row.req_uid
 
     const handleDelete = async (uid) => {
-        console.log('uid', uid)
         try {
             const res = await axios.delete(URL + uid);
-            console.log('uid', uid)
-            console.log('URL', URL)
-
             if (res.request.status) {
                 closeModal();
                 setSuccessOpen(true);
@@ -55,6 +51,9 @@ export default function ViewRequest({ row, setModalState, closeModal, setSuccess
         }
     }
 
+    // useEffect(() => {
+    //     console.log(`${uid}출력`)
+    // }, [])
     return(
         <>
             <ModalContainer>
@@ -65,19 +64,21 @@ export default function ViewRequest({ row, setModalState, closeModal, setSuccess
                         </IconButton>
                     </Tooltip>
                 </CloseButton>
-                {row && <GridContainer container>
-                    <GridInnerTitle item xs={12}>Customer Medicine Request</GridInnerTitle>
-                    <GridName item xs={flexName}>Name</GridName>
-                    <GridContent item xs={flexContent}>{row.req_name}</GridContent>
-                    <GridName item xs={flexName}>Phone</GridName>
-                    <GridContent item xs={flexContent}>{row.req_phone}</GridContent>
-                    <GridName item xs={flexName}>Medicine Details</GridName>
-                    <GridContent item xs={flexContent}>
-                        <GridDescription>{row.req_med_detail}</GridDescription>
-                    </GridContent>
-                    <GridName item xs={flexName}>Added on</GridName>
-                    <GridContent item xs={flexContent}>{row.req_joindate}</GridContent>
-                </GridContainer>}
+                {row &&
+                    <GridContainer container>
+                        <GridInnerTitle item xs={12}>Customer Medicine Request</GridInnerTitle>
+                        <GridName item xs={flexName}>Name</GridName>
+                        <GridContent item xs={flexContent}>{row.req_name}</GridContent>
+                        <GridName item xs={flexName}>Phone</GridName>
+                        <GridContent item xs={flexContent}>{row.req_phone}</GridContent>
+                        <GridName item xs={flexName}>Medicine Details</GridName>
+                        <GridContent item xs={flexContent}>
+                            <GridDescription>{row.req_med_detail}</GridDescription>
+                        </GridContent>
+                        <GridName item xs={flexName}>Added on</GridName>
+                        <GridContent item xs={flexContent}>{row.req_joindate}</GridContent>
+                    </GridContainer>
+                }
                 <StyledButton>
                     <Button variant="contained" onClick={() => setConfirmOpen(true)}>Delete</Button>
                 </StyledButton>
