@@ -24,23 +24,23 @@ import {
     GridContent,
 } from '../../styles/Modal';
 
-// import { baseURL } from '../../variables/baseURL';
-// const baseURL = 'http://3.34.144.222:8000/'
-// const path = "customer/req"
+import { baseURL } from '../../variables/baseURL';
+import { generateDate } from '../../utils/functions'
 
-const baseURL = 'http://localhost:8000/'
-const path = "customer/bill"
+const path = "customer/req"
 const URL = baseURL + path;
 
 const flexName = 4;
 const flexContent = 12 - flexName;
 
-export default function AddRequest({ closeModal, setSuccessOpen, setErrorOpen }) {
+export default function AddRequest({ length, closeModal, setSuccessOpen, setErrorOpen }) {
+
     const [inputs, setInputs] = useState({
-        "req_uid": "",
+        "req_uid": length + 1,
         "req_name": "",
         "req_phone" : "",
-        "req_med_detail": "",
+        "req_med_detail" : "",
+        "req_joindate": generateDate()
     });
 
     const handleChange = (event) => {
@@ -53,21 +53,21 @@ export default function AddRequest({ closeModal, setSuccessOpen, setErrorOpen })
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        console.log(inputs)
+        try {
+            const res = await axios.post(URL, inputs);
 
-        // try {
-        //     const res = await axios.post(URL, inputs);
-        //     if (res) {
-        //         closeModal();
-        //         setSuccessOpen(true);
-        //     } else {
-        //         console.log(res);
-        //         setErrorOpen(true);
-        //     }
-        // } catch (error) {
-        //     console.log(error);
-        //     setErrorOpen(true);
-        // }
+            if (res) {
+                closeModal();
+                setSuccessOpen(true);
+
+            } else {
+                console.log(res);
+                setErrorOpen(true);
+            }
+        } catch (error) {
+            console.log(error);
+            setErrorOpen(true);
+        }
     };
 
     return (
@@ -76,7 +76,7 @@ export default function AddRequest({ closeModal, setSuccessOpen, setErrorOpen })
                 <CloseButton>
                     <Tooltip title="Close">
                         <IconButton onClick={closeModal}>
-                            <ClearIcon />
+                            <ClearIcon/>
                         </IconButton>
                     </Tooltip>
                 </CloseButton>
@@ -96,7 +96,7 @@ export default function AddRequest({ closeModal, setSuccessOpen, setErrorOpen })
                                 size="small"
                                 fullWidth
                                 onChange={handleChange}
-                                inputProps={{ maxLength: 20 }}
+                                inputProps={{maxLength: 20}}
                             />
                         </GridContent>
                         <GridName item xs={flexName}>
@@ -110,7 +110,7 @@ export default function AddRequest({ closeModal, setSuccessOpen, setErrorOpen })
                                 size="small"
                                 fullWidth
                                 onChange={handleChange}
-                                inputProps={{ maxLength: 20 }}
+                                inputProps={{maxLength: 20}}
                             />
                         </GridContent>
                         <GridName item xs={flexName}>
@@ -121,10 +121,10 @@ export default function AddRequest({ closeModal, setSuccessOpen, setErrorOpen })
                                 id="req_med_detail"
                                 required
                                 label="Required"
-                                size="small"
                                 fullWidth
+                                multiline
+                                rows={4}
                                 onChange={handleChange}
-                                inputProps={{ maxLength: 50 }}
                             />
                         </GridContent>
 
@@ -140,8 +140,6 @@ export default function AddRequest({ closeModal, setSuccessOpen, setErrorOpen })
                     </StyledButton>
                 </form>
             </ModalContainer>
-
-
         </>
     )
 }

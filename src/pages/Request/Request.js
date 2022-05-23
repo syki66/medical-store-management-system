@@ -1,14 +1,14 @@
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, useContext, useCallback} from "react";
 import axios from "axios";
 
 import ViewRequest from "./ViewRequest";
 import AddRequest from "./AddRequest";
+import {baseURL} from "../../variables/baseURL";
 
 import styled from "styled-components";
 
 import Button from "@mui/material/Button";
 import TableCell from "@mui/material/TableCell";
-import {Modal} from "@mui/material";
 import Pagination from "@mui/material/Pagination";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
@@ -16,118 +16,17 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import TableBody from "@mui/material/TableBody";
 import TableContainer from "@mui/material/TableContainer";
+import Checkbox from '@mui/material/Checkbox';
+
+import Stack from "@mui/material/Stack";
+import {Modal, Snackbar, Alert} from "@mui/material";
 
 export default function Request() {
-    const [rows, setRows] = useState([
-            {
-                "req_uid": 1,
-                "req_name": "둘리",
-                "req_phone": "01023452345",
-                "req_med_detail": "많이아파요. 두통 치통 생리통엔 개보린. 아 시원하다~ 국밥 한그릇 주세요 이모~ 깍두기도 많이 주세요. 국밥은 역시 국물 먼저 떠먹다가 밥 말아먹는거지",
-                "req_joindate": "2022-03-22",
-                "req_status": false
-            },
-            {
-                "req_uid": 2,
-                "req_name": "고길동",
-                "req_phone": "01023452345",
-                "req_med_detail": "관절이아파요",
-                "req_joindate": "2022-04-12",
-                "req_status": false
-            },
-            {
-                "req_uid": 3,
-                "req_name": "둘리",
-                "req_phone": "01023452345",
-                "req_med_detail": "많이아파요. 두통 치통 생리통엔 개보린. 아 시원하다~ 국밥 한그릇 주세요 이모~ 깍두기도 많이 주세요. 국밥은 역시 국물 먼저 떠먹다가 밥 말아먹는거지",
-                "req_joindate": "2022-03-22",
-                "req_status": false
-            },
-            {
-                "req_uid": 4,
-                "req_name": "고길동",
-                "req_phone": "01023452345",
-                "req_med_detail": "관절이아파요",
-                "req_joindate": "2022-04-12",
-                "req_status": false
-            },
-            {
-                "req_uid": 5,
-                "req_name": "둘리",
-                "req_phone": "01023452345",
-                "req_med_detail": "많이아파요. 두통 치통 생리통엔 개보린. 아 시원하다~ 국밥 한그릇 주세요 이모~ 깍두기도 많이 주세요. 국밥은 역시 국물 먼저 떠먹다가 밥 말아먹는거지",
-                "req_joindate": "2022-03-22",
-                "req_status": false
-            },
-            {
-                "req_uid": 6,
-                "req_name": "고길동",
-                "req_phone": "01023452345",
-                "req_med_detail": "관절이아파요",
-                "req_joindate": "2022-04-12",
-                "req_status": false
-            },
-            {
-                "req_uid": 7,
-                "req_name": "둘리",
-                "req_phone": "01023452345",
-                "req_med_detail": "많이아파요. 두통 치통 생리통엔 개보린. 아 시원하다~ 국밥 한그릇 주세요 이모~ 깍두기도 많이 주세요. 국밥은 역시 국물 먼저 떠먹다가 밥 말아먹는거지",
-                "req_joindate": "2022-03-22",
-                "req_status": false
-            },
-            {
-                "req_uid": 8,
-                "req_name": "고길동",
-                "req_phone": "01023452345",
-                "req_med_detail": "관절이아파요",
-                "req_joindate": "2022-04-12",
-                "req_status": false
-            },
-            {
-                "req_uid": 9,
-                "req_name": "둘리",
-                "req_phone": "01023452345",
-                "req_med_detail": "많이아파요. 두통 치통 생리통엔 개보린. 아 시원하다~ 국밥 한그릇 주세요 이모~ 깍두기도 많이 주세요. 국밥은 역시 국물 먼저 떠먹다가 밥 말아먹는거지",
-                "req_joindate": "2022-03-22",
-                "req_status": false
-            },
-            {
-                "req_uid": 10,
-                "req_name": "고길동",
-                "req_phone": "01023452345",
-                "req_med_detail": "관절이아파요",
-                "req_joindate": "2022-04-12",
-                "req_status": false
-            },
-            {
-                "req_uid": 11,
-                "req_name": "고길동",
-                "req_phone": "01023452345",
-                "req_med_detail": "관절이아파요",
-                "req_joindate": "2022-04-12",
-                "req_status": false
-            },
-            {
-                "req_uid": 12,
-                "req_name": "둘리",
-                "req_phone": "01023452345",
-                "req_med_detail": "많이아파요. 두통 치통 생리통엔 개보린. 아 시원하다~ 국밥 한그릇 주세요 이모~ 깍두기도 많이 주세요. 국밥은 역시 국물 먼저 떠먹다가 밥 말아먹는거지",
-                "req_joindate": "2022-03-22",
-                "req_status": false
-            },
-            {
-                "req_uid": 13,
-                "req_name": "고길동",
-                "req_phone": "01023452345",
-                "req_med_detail": "관절이아파요",
-                "req_joindate": "2022-04-12",
-                "req_status": false
-            }
-        ]
-    );
+    const [rows, setRows] = useState([]);
+    const [length, setLength] = useState(0);
+
     const [currPage, setCurrPage] = useState(1);
     const [maxPage, setMaxPage] = useState(10);
-
     const [modalState, setModalState] = useState('view');
     const [modalOpen, setModalOpen] = useState(false);
     const [modalRow, setModalRow] = useState([]);
@@ -135,24 +34,32 @@ export default function Request() {
     const [successOpen, setSuccessOpen] = useState(false);
     const [errorOpen, setErrorOpen] = useState(false);
 
-    const baseURL = 'http://localhost:8000/'
     const path = "customer/req?page="
     const URL = baseURL + path;
 
     const pageCount = 10;
 
+    const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
+
     const getData = async (URL, page) => {
         try{
             const response = await axios.get(URL + page);
-            // const response = await axios.get('http://localhost:8000/customer/req?page=1');
+            console.log('request response', response)
             const resData = response.data;
-            console.log('response', response)
-            console.log('resData', resData)
             setRows(resData.request_list);
-
-            setMaxPage(Math.ceil(resData.requestallcount / pageCount))
-            // setLoading(false);
+            setLength(resData.requestallcount);
+            setMaxPage(Math.ceil(resData.requestallcount / pageCount));
             setCurrPage(page);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const handleStatus = async (row) => {
+        try{
+            const response = await axios.patch(`${baseURL}customer/req/${row.req_uid}`);
+            console.log('patch 성공 response', response)
+
         } catch (error) {
             console.log(error);
         }
@@ -172,6 +79,7 @@ export default function Request() {
     const selectModal = (state, row) => {
         if (state === 'add') {
             return <AddRequest
+                length={length}
                 closeModal = {closeModal}
                 setSuccessOpen = {setSuccessOpen}
                 setErrorOpen = {setErrorOpen}
@@ -189,16 +97,38 @@ export default function Request() {
         }
     }
 
+    const handleToastClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setSuccessOpen(false);
+        setErrorOpen(false);
+    };
+
     const handlePagi = (event, page) => {
         getData(URL, page);
     }
 
-    useEffect(() => {
-        // getData()
-        console.log('rows', rows)
-        // console.log('rows.request_list', rows.request_list)
+    const init = () => {
+        if (rows.length === 0) {
+            getData(URL, 1);
+            setCurrPage(1);
+        } else {
+            getData(URL, currPage);
+        }
+    }
 
-    },[])
+    useEffect(() => {
+            init();
+        }, [
+            successOpen,
+            maxPage,
+        ]
+    );
+
+    useEffect(() => {
+        getData()
+    },[rows])
 
     return (
         <>
@@ -223,7 +153,9 @@ export default function Request() {
                         <StyledCell>Name</StyledCell>
                         <StyledCell>Phone</StyledCell>
                         <StyledCell>Medicine Details</StyledCell>
+                        <StyledCell>Status</StyledCell>
                         <StyledCell>Added On</StyledCell>
+                        <StyledCell>Action</StyledCell>
                         <StyledCell>More</StyledCell>
                     </TableRow>
                 </TableHead>
@@ -235,8 +167,18 @@ export default function Request() {
                             <StyledCell component="th" scope="row">{(currPage * pageCount - pageCount) + (index + 1)}</StyledCell>
                             <StyledCell>{row.req_name}</StyledCell>
                             <StyledCell>{row.req_phone}</StyledCell>
-                            <StyledCell width='200px'>{row.req_med_detail}</StyledCell>
+                            <StyledCell>{row.req_med_detail}</StyledCell>
+                            <StyledCell>
+                                {
+                                    row.req_status ? <p>Uncomplete</p> : <p>Completed</p>
+                                }
+                            </StyledCell>
                             <StyledCell width='150px'>{row.req_joindate}</StyledCell>
+                            <StyledCell>
+                                {
+                                    row.req_status ? <Checkbox {...label} onClick={() => handleStatus(row)} /> : <Checkbox {...label} disabled checked />
+                                }
+                            </StyledCell>
                             <StyledCell>
                                 <Button
                                     variant="contained"
@@ -256,14 +198,27 @@ export default function Request() {
 
         </InnerContainer>
 
-    <StyledModal
-        open={modalOpen}
-        onClose={closeModal}
-    >
-        <>
-            {selectModal(modalState, modalRow)}
-        </>
-    </StyledModal>
+        <StyledModal
+            open={modalOpen}
+            onClose={closeModal}
+        >
+            <>
+                {selectModal(modalState, modalRow)}
+            </>
+        </StyledModal>
+
+            <Stack spacing={2} sx={{ width: '100%' }}>
+                <Snackbar anchorOrigin={{ vertical: 'top', horizontal: 'center' }} open={successOpen} autoHideDuration={3000} onClose={handleToastClose}>
+                    <Alert onClose={handleToastClose} severity="success" sx={{ width: '100%' }}>
+                        성공적으로 처리 되었습니다.
+                    </Alert>
+                </Snackbar>
+                <Snackbar anchorOrigin={{ vertical: 'top', horizontal: 'center' }} open={errorOpen} autoHideDuration={3000} onClose={handleToastClose}>
+                    <Alert onClose={handleToastClose} severity="error" sx={{ width: '100%' }}>
+                        오류가 발생하였습니다.
+                    </Alert>
+                </Snackbar>
+            </Stack>
     </>
     )
 }
