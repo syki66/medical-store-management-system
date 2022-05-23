@@ -205,11 +205,11 @@ export default function SideDrawer() {
                 <DrawerHeader />
                 <HomeContext.Provider value={{homeData}}>
                     <Routes>
-                        <Route className="" path="/" element={<Home/>} />
-                        <Route className="" path="/company" element={<Company/>} />
+                        <Route className="" exact path="/" element={<Home/>} />
+                        <Route className="" path="/company/:id" element={<Company/>} />
                         <Route className="" path="/companyAccount" element={<CompanyAccount/>} />
-                        <Route className="" path="/employee" element={<Employee/>} />
-                        <Route className="" path="/medicine" element={<Medicine/>} />
+                        <Route className="" path="/employee/:id" element={<Employee/>} />
+                        <Route className="" path="/medicine/:id" element={<Medicine/>} />
                         <Route className="" path="/bill" element={<Bill/>} />
                         <Route className="" path="/customerRequest" element={<Request/>} />
                         <Route className="" path="/myPage" element={<MyPage/>} />
