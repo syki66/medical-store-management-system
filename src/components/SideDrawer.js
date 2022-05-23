@@ -2,7 +2,6 @@ import React, {useEffect, useState, useContext } from 'react';
 
 import {Link, Route, Routes, useLocation} from "react-router-dom";
 import {useNavigate} from "react-router";
-import axios from "axios";
 
 import {baseURL} from "../variables/baseURL";
 import Home from "../pages/Home/Home";
