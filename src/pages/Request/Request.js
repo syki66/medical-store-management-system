@@ -118,7 +118,8 @@ export default function Request() {
     }
 
     const init = () => {
-        if (rows.length === 0) {
+        if (rows && rows.length === 0) {
+            // console.log('rows.length1', rows.length)
             getData(URL, 1);
             setCurrPage(1);
         } else {
@@ -131,12 +132,15 @@ export default function Request() {
         }, [
             successOpen,
             maxPage,
+        currPage
         ]
     );
 
     useEffect(() => {
         getData()
-    },[rows])
+        // console.log('rows.length2', rows.length)
+
+    },[])
 
     return (
         <>
