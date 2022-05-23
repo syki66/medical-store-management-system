@@ -1,7 +1,8 @@
 import * as React from 'react';
 
-import {Link, Route, Routes} from "react-router-dom";
+import {Link, Route, Routes, useLocation} from "react-router-dom";
 import {useNavigate} from "react-router";
+import {baseURL} from '../variables/baseURL'
 
 import Home from "../pages/Home/Home";
 import Company from "../pages/Company/Company";
@@ -31,14 +32,16 @@ import ListItemText from '@mui/material/ListItemText';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
+import {useEffect} from "react";
+import axios from "axios";
 
 
-
-export default function SideDrawer() {
+export default function SideDrawer( {setLogin} ) {
     const [auth, setAuth] = React.useState(true);
     const [anchorEl, setAnchorEl] = React.useState(null);
 
     const navigate = useNavigate()
+    const location = useLocation()
 
     const goToHome = () => {
         navigate('/')
@@ -66,6 +69,25 @@ export default function SideDrawer() {
     const handleClose = () => {
         setAnchorEl(null);
     };
+
+    const checkLoginSession = async (URL) => {
+        try{
+            const response = await axios.get(URL);
+        } catch (error) {
+            const { status, data } = error.response;
+            if (status === 403 && data.message === "session ID not found") {
+                console.log(data);
+                sessionStorage.setItem('login', false);
+                setLogin(false)
+            } else {
+                console.log(error);
+            }
+        }
+    }
+
+    useEffect(() => {
+        checkLoginSession(baseURL + 'user/');
+    }, [location])
 
     return (
         <Box sx={{ display: 'flex' }}>

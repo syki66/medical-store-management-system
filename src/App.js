@@ -32,7 +32,9 @@ function App() {
               <BrowserRouter>
                   {/*<Header />*/}
                   <div className="container">
-                    <SideDrawer />
+                    <SideDrawer
+                        setLogin = {setLogin}
+                    />
                       {/*<SideMenuBar />*/}
                   </div>
               </BrowserRouter>
