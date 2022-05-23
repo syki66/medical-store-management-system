@@ -108,27 +108,40 @@ const handleChange = (event) => {
 
 const handleSubmit = async (event) => {
     event.preventDefault();
-    try{
-        console.log(inputs)
-        const res = await axios.post(URL, inputs);
-        if (res.status === 200) {
-            setSuccessOpen(true);
-            closeModal();
-        } else {
-            console.log(res.request.status);
+
+    // validError에서 state가 모두 false일 경우에만 제출
+    let pass = true;
+    Object.keys(validError).map((key) => {
+        if (validError[key].state === true) {
+            pass = false;
+        }
+    })
+
+    if (pass) {
+        try{
+            console.log(inputs)
+            const res = await axios.post(URL, inputs);
+            if (res.status === 200) {
+                setSuccessOpen(true);
+                closeModal();
+            } else {
+                console.log(res.request.status);
+                setErrorOpen(true);
+            }
+        } catch (error) {
+            if (error.response.status === 400) {
+                setValidError({
+                    ...validError,
+                    "user_email": {
+                        state: true,
+                        helperText: "이미 사용중이거나 탈퇴한 아이디입니다.",
+                    }
+                })
+            }
+            console.log(error);
             setErrorOpen(true);
         }
-    } catch (error) {
-        if (error.response.status === 400) {
-            setValidError({
-                ...validError,
-                "user_email": {
-                    state: true,
-                    helperText: "이미 사용중이거나 탈퇴한 아이디입니다.",
-                }
-            })
-        }
-        console.log(error);
+    } else {
         setErrorOpen(true);
     }
 }

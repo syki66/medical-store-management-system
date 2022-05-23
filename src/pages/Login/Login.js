@@ -115,6 +115,7 @@ export default function Login( { setLogin } ) {
         if (reason === 'clickaway') {
             return;
         }
+        setSuccessOpen(false);
         setErrorOpen(false);
     };
 
