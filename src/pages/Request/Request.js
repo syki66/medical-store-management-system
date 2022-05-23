@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useContext, useCallback} from "react";
+import React, {useState, useEffect} from "react";
 import axios from "axios";
 
 import ViewRequest from "./ViewRequest";
@@ -58,8 +58,15 @@ export default function Request() {
     const handleStatus = async (row) => {
         try{
             const response = await axios.patch(`${baseURL}customer/req/${row.req_uid}`);
-            console.log('patch 성공 response', response)
+            if (response) {
+                closeModal();
+                setSuccessOpen(true);
+                // console.log('patch 성공 response', response)
 
+            } else {
+                console.log(response);
+                setErrorOpen(true);
+            }
         } catch (error) {
             console.log(error);
         }
