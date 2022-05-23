@@ -33,10 +33,10 @@ const URL = baseURL + path;
 const flexName = 4;
 const flexContent = 12 - flexName;
 
-export default function AddRequest({ length, closeModal, setSuccessOpen, setErrorOpen }) {
+export default function AddRequest({ reqLength, closeModal, setSuccessOpen, setErrorOpen }) {
 
     const [inputs, setInputs] = useState({
-        "req_uid": length + 1,
+        "req_uid": reqLength && reqLength + 1,
         "req_name": "",
         "req_phone" : "",
         "req_med_detail" : "",
@@ -49,7 +49,7 @@ export default function AddRequest({ length, closeModal, setSuccessOpen, setErro
             ...inputs,
             [id]: value
         });
-    }
+    };
 
     const handleSubmit = async (event) => {
         event.preventDefault();

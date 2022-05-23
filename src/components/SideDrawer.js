@@ -49,18 +49,19 @@ export default function SideDrawer() {
 
     const getData = async () => {
         try {
-            const response = await axios.get(URL)
-            setHomeData(response.data)
+            const response = await axios.get(URL);
+            setHomeData(response.data);
+            console.log('sidedrawer-response', response);
         } catch (error) {
             console.log(error)
         }
-    }
+    };
 
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
     const goToHome = () => {
         navigate('/')
-    }
+    };
 
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
@@ -87,8 +88,8 @@ export default function SideDrawer() {
 
     useEffect(() => {
         getData();
-        console.log('sidedrawer-data', homeData)
-    }, [])
+        console.log('sidedrawer-homeData', homeData);
+    }, []);
 
     return (
         <Box sx={{ display: 'flex' }}>

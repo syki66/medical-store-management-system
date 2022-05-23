@@ -23,7 +23,7 @@ import {Modal, Snackbar, Alert} from "@mui/material";
 
 export default function Request() {
     const [rows, setRows] = useState([]);
-    const [length, setLength] = useState(0);
+    const [reqLength, setReqLength] = useState(0);
 
     const [currPage, setCurrPage] = useState(1);
     const [maxPage, setMaxPage] = useState(10);
@@ -45,9 +45,10 @@ export default function Request() {
         try{
             const response = await axios.get(URL + page);
             console.log('request response', response)
+
             const resData = response.data;
             setRows(resData.request_list);
-            setLength(resData.requestallcount);
+            setReqLength(resData.requestallcount);
             setMaxPage(Math.ceil(resData.requestallcount / pageCount));
             setCurrPage(page);
         } catch (error) {
@@ -86,7 +87,7 @@ export default function Request() {
     const selectModal = (state, row) => {
         if (state === 'add') {
             return <AddRequest
-                length={length}
+                reqLength={reqLength}
                 closeModal = {closeModal}
                 setSuccessOpen = {setSuccessOpen}
                 setErrorOpen = {setErrorOpen}
@@ -180,7 +181,7 @@ export default function Request() {
                                     row.req_status ? <p>Uncomplete</p> : <p>Completed</p>
                                 }
                             </StyledCell>
-                            <StyledCell width='150px'>{row.req_joindate}</StyledCell>
+                            <StyledCell>{row.req_joindate}</StyledCell>
                             <StyledCell>
                                 {
                                     row.req_status ? <Checkbox {...label} onClick={() => handleStatus(row)} /> : <Checkbox {...label} disabled checked />
