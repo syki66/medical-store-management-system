@@ -3,7 +3,7 @@ import { BrowserRouter } from "react-router-dom";
 import GlobalStyle from './components/GlobalStyle'
 
 import Login from './pages/Login/Login'
-import {useEffect, useState} from 'react';
+import { useState} from 'react';
 
 
 import SideDrawer from "./components/SideDrawer";
@@ -30,10 +30,8 @@ function App() {
               <>
               <GlobalStyle />
               <BrowserRouter>
-                  {/*<Header />*/}
                   <div className="container">
                     <SideDrawer />
-                      {/*<SideMenuBar />*/}
                   </div>
               </BrowserRouter>
               </>

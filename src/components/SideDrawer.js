@@ -87,7 +87,7 @@ export default function SideDrawer() {
 
     useEffect(() => {
         getData();
-        // console.log('homeData', homeData)
+        console.log('sidedrawer-data', homeData)
     }, [])
 
     return (
