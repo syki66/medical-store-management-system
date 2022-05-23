@@ -44,9 +44,10 @@ export default function Request() {
     const getData = async (URL, page) => {
         try{
             const response = await axios.get(URL + page);
-            console.log('request response', response)
+            console.log('request response', response);
 
             const resData = response.data;
+
             setRows(resData.request_list);
             setReqLength(resData.requestallcount);
             setMaxPage(Math.ceil(resData.requestallcount / pageCount));
@@ -132,13 +133,12 @@ export default function Request() {
         }, [
             successOpen,
             maxPage,
-        currPage
         ]
     );
 
     useEffect(() => {
         getData()
-        // console.log('rows.length2', rows.length)
+        console.log('rows.length2', rows && rows.length)
 
     },[])
 
