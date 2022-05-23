@@ -47,7 +47,8 @@ export default function Bill() {
     const getMedList = async () => {
         try {
             const response = await axios.get(URL)
-            // console.log('medicine response', response)
+            console.log('medicine response', response)
+
             setMedList(response.data.medicine_list)
             // console.log('medicine list response ', response.data.medicine_list)
         } catch (error) {
@@ -143,7 +144,7 @@ export default function Bill() {
                 />
             );
         })
-    }, [detailList, handleChange, handleDelete]);
+    }, [detailList, handleChange, handleDelete, medList]);
 
     useEffect(() => {
         getMedList();
