@@ -38,7 +38,7 @@ import axios from "axios";
 
 export const HomeContext = React.createContext(null);
 
-const sessionTime = 1800
+const sessionTime = 1800;
 
 export default function SideDrawer( {setLogin} ) {
     const [auth, setAuth] = React.useState(true);
@@ -66,6 +66,7 @@ export default function SideDrawer( {setLogin} ) {
                 console.log('error.response.data', data);
                 sessionStorage.setItem('login', false);
                 setLogin(false)
+                alert("세션이 만료되어 로그인 페이지로 돌아갑니다.")
             } else {
                 console.log(error);
             }
@@ -102,12 +103,15 @@ export default function SideDrawer( {setLogin} ) {
         setAnchorEl(null);
     };
 
-    const runLogout = async () => {
+    const runLogout = async (forced) => {
         try {
             const response = await axios.post(URL + '/logout/');
             if (response.data.message === 'Ok') {
                 sessionStorage.setItem('login', false);
                 setLogin(false);
+                if (forced){
+                    alert("세션이 만료되어 로그인 페이지로 돌아갑니다.")
+                }
             }
         } catch (error){
             console.log(error);
@@ -118,14 +122,11 @@ export default function SideDrawer( {setLogin} ) {
     const runTimer = () => {
         interval.current = setInterval(() => {
             if (timer.current <= 0){
-                console.log('logout');
-                runLogout();
-                setLogin(false)
+                runLogout(true);
             }
             const minute = Math.floor(timer.current / 60);
             const second = timer.current % 60;
             timer.current -= 1;
-            // console.log(minute, second);
             setClock(`${minute < 10 ? `0${minute}` : minute}:${second < 10 ? `0${second}` : second}`);
         }, 1000);
     }
