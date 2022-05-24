@@ -136,11 +136,11 @@ export default function Request() {
         ]
     );
 
-    useEffect(() => {
-        getData()
-        console.log('rows.length2', rows && rows.length)
-
-    },[])
+    // useEffect(() => {
+    //     getData()
+    //     console.log('rows.length2', rows && rows.length)
+    //
+    // },[])
 
     return (
         <>
