@@ -1,5 +1,8 @@
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
+
+import {baseURL} from "../../variables/baseURL";
+
 import {IconButton, Button, Tooltip} from "@mui/material";
 import ClearIcon from '@mui/icons-material/Clear';
 
@@ -28,13 +31,13 @@ const flexContent = 12 - flexName;
 export default function ViewRequest({ row, setModalState, closeModal, setSuccessOpen, setErrorOpen }) {
     const [confirmOpen, setConfirmOpen] = useState(false);
 
-    const baseURL = 'http://localhost:8000/'
     const path = "customer/req/"
     const URL = baseURL + path;
 
     const uid = row.req_uid
 
     const handleDelete = async (uid) => {
+        console.log("URL + uid" , URL + uid);
         try {
             const res = await axios.delete(URL + uid);
             if (res.request.status) {
