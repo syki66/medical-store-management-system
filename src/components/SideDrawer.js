@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useContext } from 'react';
+import React, {useEffect, useState, useContext, useRef } from 'react';
 
 import {Link, Route, Routes, useLocation} from "react-router-dom";
 import {useNavigate} from "react-router";
@@ -38,11 +38,18 @@ import axios from "axios";
 
 export const HomeContext = React.createContext(null);
 
+const sessionTime = 1800
+
 export default function SideDrawer( {setLogin} ) {
     const [auth, setAuth] = React.useState(true);
     const [anchorEl, setAnchorEl] = React.useState(null);
 
     const [homeData, setHomeData] = useState(null);
+    const [userName, setUserName] = useState('');
+
+    const interval = useRef(null);
+    const timer = useRef(sessionTime - 1);
+    const [clock, setClock] = useState('30:00');
 
     const path = "user"
     const URL = baseURL + path;
@@ -52,6 +59,7 @@ export default function SideDrawer( {setLogin} ) {
             const response = await axios.get(URL);
             setHomeData(response.data);
             console.log('sidedrawer-response', response);
+            setUserName(response.data.user_storename)
         } catch (error) {
             const { status, data } = error.response;
             if (status === 403 && data.message === "session ID not found") {
@@ -65,7 +73,7 @@ export default function SideDrawer( {setLogin} ) {
     };
 
     const navigate = useNavigate();
-    const location = useLocation()    
+    const location = useLocation()
 
     const goToHome = () => {
         navigate('/')
@@ -94,9 +102,51 @@ export default function SideDrawer( {setLogin} ) {
         setAnchorEl(null);
     };
 
+    const runLogout = async () => {
+        try {
+            const response = await axios.post(URL + '/logout/');
+            if (response.data.message === 'Ok') {
+                sessionStorage.setItem('login', false);
+                setLogin(false);
+            }
+        } catch (error){
+            console.log(error);
+        }
+    }
+
+
+    const runTimer = () => {
+        interval.current = setInterval(() => {
+            if (timer.current <= 0){
+                console.log('logout');
+                runLogout();
+                setLogin(false)
+            }
+            const minute = Math.floor(timer.current / 60);
+            const second = timer.current % 60;
+            timer.current -= 1;
+            // console.log(minute, second);
+            setClock(`${minute < 10 ? `0${minute}` : minute}:${second < 10 ? `0${second}` : second}`);
+        }, 1000);
+    }
+
+    const clearTimer = () => {
+        clearInterval(interval.current);
+        timer.current = sessionTime - 1;
+        setClock('30:00');
+
+    }
+
     useEffect(() => {
         getData();
         console.log('sidedrawer-homeData', homeData);
+
+        clearTimer();
+        runTimer();
+
+        return () => {
+            clearInterval(interval.current);
+        }
     }, [location]);
 
     return (
@@ -117,39 +167,64 @@ export default function SideDrawer( {setLogin} ) {
                         <MenuIcon />
                     </IconButton>
 
-                    <Typography variant="h6" noWrap component="div">
+                    <TypographyStyle variant="h6" noWrap component="div">
                         <h6 className='logo' onClick={() => goToHome()}>Medical Store Management System</h6>
-                    </Typography>
-                        <IconButton
-                            size="large"
-                            aria-label="account of current user"
-                            aria-controls="menu-appbar"
-                            aria-haspopup="true"
-                            onClick={handleMenu}
-                            color="inherit"
-                        >
-                            <AccountCircle />
-                        </IconButton>
-                        <Menu
-                            id="menu-appbar"
-                            anchorEl={anchorEl}
-                            anchorOrigin={{
-                                vertical: 'top',
-                                horizontal: 'right',
-                            }}
-                            keepMounted
-                            transformOrigin={{
-                                vertical: 'top',
-                                horizontal: 'right',
-                            }}
-                            open={Boolean(anchorEl)}
-                            onClose={handleClose}
-                        >
-                            <Link to="/myPage">
-                                <MenuItem onClick={handleClose}>My Information</MenuItem>
-                            </Link>
-                            <MenuItem onClick={handleClose}>Logout</MenuItem>
-                        </Menu>
+                    </TypographyStyle>
+
+                    <TypographyStyle sx={{ flexGrow: 1 }} />
+
+                    <TypographyStyle variant="h6" noWrap component="div">
+                        <h6 className='timer'>{clock}</h6>
+                    </TypographyStyle>
+
+                    <TypographyStyle variant="h6" noWrap component="div">
+                        <h6 className='timer_btn' onClick={() => {
+                            getData();
+                            clearTimer();
+                            runTimer();
+                        }}>연장</h6>
+                    </TypographyStyle>
+
+                    <TypographyStyle variant="h6" noWrap component="div">
+                        <h6 className='username'>{userName}님</h6>
+                    </TypographyStyle>
+
+                    <IconButton
+                        size="large"
+                        aria-label="account of current user"
+                        aria-controls="menu-appbar"
+                        aria-haspopup="true"
+                        onClick={handleMenu}
+                        color="inherit"
+                    >
+                        <AccountCircle />
+                    </IconButton>
+
+                    <Menu
+                        id="menu-appbar"
+                        anchorEl={anchorEl}
+                        anchorOrigin={{
+                            vertical: 'bottom',
+                            horizontal: 'right',
+                        }}
+                        keepMounted
+                        transformOrigin={{
+                            vertical: 'top',
+                            horizontal: 'right',
+                        }}
+                        open={Boolean(anchorEl)}
+                        onClose={handleClose}
+                    >
+                        <Link to="/myPage">
+                            <MenuItem onClick={handleClose}>My Information</MenuItem>
+                        </Link>
+                        <MenuItem onClick={() => {
+                            handleClose();
+                            runLogout();
+                        }}>
+                            Logout
+                        </MenuItem>
+                    </Menu>
                 </Toolbar>
             </AppBar>
 
@@ -183,11 +258,11 @@ export default function SideDrawer( {setLogin} ) {
                                 <ListItemText primary="Manage Company" />
                             </ListItem>
                         </Link>
-                        <Link className="link" to="/companyAccount">
-                            <ListItem button divider>
-                                <ListItemText primary="Manage Company Account" />
-                            </ListItem>
-                        </Link>
+                        {/*<Link className="link" to="/companyAccount">*/}
+                        {/*    <ListItem button divider>*/}
+                        {/*        <ListItemText primary="Manage Company Account" />*/}
+                        {/*    </ListItem>*/}
+                        {/*</Link>*/}
                         <Link className="link" to="/employee/1">
                             <ListItem button divider>
                                 <ListItemText primary="Manage Employee" />
@@ -276,12 +351,30 @@ const DrawerHeader = styled('div')(({ theme }) => ({
     justifyContent: 'flex-end',
 }));
 
-// const TypographyStyle = styled.h6`
-//   .logo {
-//     font-weight: bold;
-//     font-size: 1.3em;
-//   }
-//   .logo:hover {
-//     cursor:pointer;
-//   }
-// `
+const TypographyStyle = styled('Typography')`
+  && {
+      .logo, .timer, .username {
+        font-size: 1.3em;
+      }
+      .logo:hover{
+        cursor:pointer;
+      }
+        
+      .username {
+        margin-left: 1em;
+      }
+    
+      .timer_btn {
+        padding: 0.3em;
+        margin: 0.5em;
+        border: 0.1em solid;
+        border-radius: 0.3em;
+        transition: background-color 0.2s, color 0.2s;  
+      }
+      .timer_btn:hover {
+        background-color: white;
+        color: #f2413b;
+        cursor:pointer;
+      }
+  }
+`
