@@ -182,13 +182,13 @@ export default function Request() {
                             <StyledCell>{row.req_med_detail}</StyledCell>
                             <StyledCell>
                                 {
-                                    row.req_status ? <p>Uncomplete</p> : <p>Completed</p>
+                                    row.req_status ? <p>Completed</p> : <p>Uncompleted</p>
                                 }
                             </StyledCell>
                             <StyledCell>{row.req_joindate}</StyledCell>
                             <StyledCell>
                                 {
-                                    row.req_status ? <Checkbox {...label} onClick={() => handleStatus(row)} /> : <Checkbox {...label} disabled checked />
+                                    row.req_status ? <Checkbox {...label} disabled checked /> : <Checkbox {...label} onClick={() => handleStatus(row)} />
                                 }
                             </StyledCell>
                             <StyledCell>
