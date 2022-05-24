@@ -111,7 +111,7 @@ export default function Employee() {
     }
 
     const init = () => {
-        if (maxPage !== currPage && currPage >= 2) {
+        if (rows.length == 0 && maxPage !== currPage && currPage >= 2) {
             navigate(`/employee/${currPage - 1}`);
             getData(URL, currPage - 1);
         } else {

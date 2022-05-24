@@ -59,7 +59,7 @@ export default function AddMedicine({ companyList, closeModal, setSuccessOpen, s
         inputs.current.med_salt = saltArray;
         console.log(inputs.current)
         try {
-            const res = await axios.post(URL, inputs);
+            const res = await axios.post(URL, inputs.current);
             if (res.request.status) {
                 closeModal();
                 setSuccessOpen(true);

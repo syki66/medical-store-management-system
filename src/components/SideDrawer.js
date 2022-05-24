@@ -1,8 +1,7 @@
 import React, {useEffect, useState, useContext } from 'react';
 
-import {Link, Route, Routes} from "react-router-dom";
+import {Link, Route, Routes, useLocation} from "react-router-dom";
 import {useNavigate} from "react-router";
-import axios from "axios";
 
 import {baseURL} from "../variables/baseURL";
 import Home from "../pages/Home/Home";
@@ -33,12 +32,13 @@ import ListItemText from '@mui/material/ListItemText';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
+import axios from "axios";
 
 
 
 export const HomeContext = React.createContext(null);
 
-export default function SideDrawer() {
+export default function SideDrawer( {setLogin} ) {
     const [auth, setAuth] = React.useState(true);
     const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -53,11 +53,19 @@ export default function SideDrawer() {
             setHomeData(response.data);
             console.log('sidedrawer-response', response);
         } catch (error) {
-            console.log(error)
+            const { status, data } = error.response;
+            if (status === 403 && data.message === "session ID not found") {
+                console.log('error.response.data', data);
+                sessionStorage.setItem('login', false);
+                setLogin(false)
+            } else {
+                console.log(error);
+            }
         }
     };
 
     const navigate = useNavigate();
+    const location = useLocation()    
 
     const goToHome = () => {
         navigate('/')
@@ -89,7 +97,7 @@ export default function SideDrawer() {
     useEffect(() => {
         getData();
         console.log('sidedrawer-homeData', homeData);
-    }, []);
+    }, [location]);
 
     return (
         <Box sx={{ display: 'flex' }}>

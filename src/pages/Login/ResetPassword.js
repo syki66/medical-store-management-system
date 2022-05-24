@@ -72,22 +72,33 @@ export default function ResetPassword( {closeModal, setSuccessOpen, setErrorOpen
     const handleSubmit = async (event, confirmed) => {
         event.preventDefault();
         if (confirmed){
-            try{
-                if (validError.current.user_pw_confirm.state || !newPassword.user_pw_confirm) {
-                    setErrorOpen(true);
-                    throw '비밀번호가 일치하지 않습니다.';
+            // validError에서 state가 모두 false일 경우에만 제출
+            let pass = true;
+            Object.keys(validError.current).map((key) => {
+                if (validError.current[key].state === true) {
+                    pass = false;
                 }
-                const res = await axios.post(URL + 'set/', newPassword);
-                console.log(res)
-                if (res.status === 200) {
-                    closeModal();
-                    setSuccessOpen(true);
-                } else {
-                    console.log(res.request.status);
+            })
+            if (pass) {
+                try{
+                    if (validError.current.user_pw_confirm.state || !newPassword.user_pw_confirm) {
+                        setErrorOpen(true);
+                        throw '비밀번호가 일치하지 않습니다.';
+                    }
+                    const res = await axios.post(URL + 'set/', newPassword);
+                    console.log(res)
+                    if (res.status === 200) {
+                        closeModal();
+                        setSuccessOpen(true);
+                    } else {
+                        console.log(res.request.status);
+                        setErrorOpen(true);
+                    }
+                } catch (error) {
+                    console.log(error);
                     setErrorOpen(true);
                 }
-            } catch (error) {
-                console.log(error);
+            } else {
                 setErrorOpen(true);
             }
         } else {
