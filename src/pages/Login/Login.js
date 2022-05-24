@@ -79,7 +79,6 @@ export default function Login( { setLogin } ) {
     const handleSubmit = async (event) => {
         event.preventDefault();
         try{
-            console.log(inputs)
             const response = await axios.post(URL, inputs)
             if (response.status) {
                 setLogin(true);
