@@ -40,7 +40,7 @@ export const HomeContext = React.createContext(null);
 
 const sessionTime = 1800;
 
-export default function SideDrawer( {setLogin} ) {
+export default function SideDrawer( {setLogin, errorMessage, setErrorOpen} ) {
     const [auth, setAuth] = React.useState(true);
     const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -63,10 +63,9 @@ export default function SideDrawer( {setLogin} ) {
         } catch (error) {
             const { status, data } = error.response;
             if (status === 403 && data.message === "session ID not found") {
-                console.log('error.response.data', data);
+                // console.log('error.response.data', data);
                 sessionStorage.setItem('login', false);
                 setLogin(false)
-                alert("세션이 만료되어 로그인 페이지로 돌아갑니다.")
             } else {
                 console.log(error);
             }
@@ -110,7 +109,8 @@ export default function SideDrawer( {setLogin} ) {
                 sessionStorage.setItem('login', false);
                 setLogin(false);
                 if (forced){
-                    alert("세션이 만료되어 로그인 페이지로 돌아갑니다.")
+                    errorMessage.current = "세션이 만료되어 자동 로그아웃 되었습니다.";
+                    setErrorOpen(true);
                 }
             }
         } catch (error){
