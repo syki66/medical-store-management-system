@@ -38,8 +38,9 @@ export default function EditCompany({ row, bankList, closeModal, setSuccessOpen,
         "com_description": row.com_description,
         "com_joindate": row.com_joindate,
         "com_account_no": row.com_account_no,
-        "bank_uid": select + 1,
+        "bank_uid": row.bank_name,
     });
+    const [bankName, setBankName] = useState('')
 
     const [confirmOpen, setConfirmOpen] = useState(false);
 
@@ -50,6 +51,15 @@ export default function EditCompany({ row, bankList, closeModal, setSuccessOpen,
             ...inputs,
             [name]: value + 1
         });
+        // console.log(name, value);
+        if ('bank_uid' == name) {
+            setInputs({
+                ...inputs,
+                [name]: Object.values(bankList[value])[0]
+            });
+
+            // console.log(Object.values(bankList[value])[0]);
+        }
     };
 
     const handleChange = (event) => {
@@ -62,6 +72,7 @@ export default function EditCompany({ row, bankList, closeModal, setSuccessOpen,
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+        console.log(inputs)
         try {
             const res = await axios.patch(URL + row.com_uid, inputs);
             if (res.request.status) {

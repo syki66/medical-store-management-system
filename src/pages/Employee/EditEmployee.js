@@ -40,7 +40,7 @@ export default function EditEmployee({ row, bankList, closeModal, setSuccessOpen
         "emp_phone": row.emp_phone,
         "emp_address": row.emp_address,
         "emp_account_no": row.emp_account_no,
-        "bank_uid": select + 1,
+        "bank_uid": row.bank_name,
         "emp_salary": row.emp_salary,
         "emp_added_on": row.emp_added_on,
     });
@@ -57,7 +57,9 @@ export default function EditEmployee({ row, bankList, closeModal, setSuccessOpen
     const handleSelect = (event) => {
         const { name, value } = event.target
         setSelect(value);
-        inputs.current[name] = value + 1;
+        if ('bank_uid' == name) {
+            inputs.current[name] = Object.values(bankList[value])[0];
+        }
     };
 
     const handleChange = (event) => {
