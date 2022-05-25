@@ -48,6 +48,14 @@ export default function AddCompany({ bankList, closeModal, setSuccessOpen, setEr
             ...inputs,
             [name]: value + 1
         });
+        if ('bank_uid' == name) {
+            setInputs({
+                ...inputs,
+                [name]: Object.values(bankList[value])[0]
+            });
+
+            // console.log(Object.values(bankList[value])[0]);
+        }
     };
 
     const handleChange = (event) => {
@@ -60,6 +68,7 @@ export default function AddCompany({ bankList, closeModal, setSuccessOpen, setEr
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+        console.log(inputs);
         try {
             const res = await axios.post(URL, inputs);
             if (res.request.status) {
