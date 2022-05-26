@@ -137,10 +137,12 @@ export default function AddMedicine({ companyList, closeModal, setSuccessOpen, s
                                 size="small"
                                 fullWidth
                                 onChange={handleChange}
-                                inputProps={{ maxLength: 20 }}
+                                inputProps={{ maxLength: 8 }}
                             />
                         </GridContent>
-                        <GridName item xs={flexName}>Buy Price</GridName>
+                        <GridName item xs={flexName}>
+                            Buy Price
+                        </GridName>
                         <GridContent item xs={flexContent}>
                             <TextField
                                 id="med_buyprice"
@@ -149,7 +151,10 @@ export default function AddMedicine({ companyList, closeModal, setSuccessOpen, s
                                 size="small"
                                 fullWidth
                                 onChange={handleChange}
-                                inputProps={{ maxLength: 10 }}
+                                type="number"
+                                onInput = {(event) =>{
+                                    event.target.value = Math.max(0, parseInt(event.target.value) ).toString().slice(0,9)
+                                }}
                             />
                         </GridContent>
                         <GridName item xs={flexName}>
@@ -163,7 +168,10 @@ export default function AddMedicine({ companyList, closeModal, setSuccessOpen, s
                                 size="small"
                                 fullWidth
                                 onChange={handleChange}
-                                inputProps={{ maxLength: 10 }}
+                                type="number"
+                                onInput = {(event) =>{
+                                    event.target.value = Math.max(0, parseInt(event.target.value) ).toString().slice(0,9)
+                                }}
                             />
                         </GridContent>
                         <GridName item xs={flexName}>
@@ -177,7 +185,10 @@ export default function AddMedicine({ companyList, closeModal, setSuccessOpen, s
                                 size="small"
                                 fullWidth
                                 onChange={handleChange}
-                                inputProps={{ maxLength: 20 }}
+                                type="number"
+                                onInput = {(event) =>{
+                                    event.target.value = Math.max(0, parseInt(event.target.value) ).toString().slice(0,4)
+                                }}
                             />
                         </GridContent>
                         <GridName item xs={flexName}>
@@ -191,7 +202,10 @@ export default function AddMedicine({ companyList, closeModal, setSuccessOpen, s
                                 size="small"
                                 fullWidth
                                 onChange={handleChange}
-                                inputProps={{ maxLength: 20 }}
+                                type="number"
+                                onInput = {(event) =>{
+                                    event.target.value = Math.max(0, parseInt(event.target.value) ).toString().slice(0,4)
+                                }}
                             />
                         </GridContent>
                         <GridName item xs={flexName}>
@@ -249,7 +263,10 @@ export default function AddMedicine({ companyList, closeModal, setSuccessOpen, s
                                 size="small"
                                 fullWidth
                                 onChange={handleChange}
-                                inputProps={{ maxLength: 20 }}
+                                type="number"
+                                onInput = {(event) =>{
+                                    event.target.value = Math.max(0, parseInt(event.target.value) ).toString().slice(0,4)
+                                }}
                             />
                         </GridContent>
                         <GridName item xs={flexName}>
@@ -263,7 +280,10 @@ export default function AddMedicine({ companyList, closeModal, setSuccessOpen, s
                                 size="small"
                                 fullWidth
                                 onChange={handleChange}
-                                inputProps={{ maxLength: 20 }}
+                                type="number"
+                                onInput = {(event) =>{
+                                    event.target.value = Math.max(0, parseInt(event.target.value) ).toString().slice(0,4)
+                                }}
                             />
                         </GridContent>
 

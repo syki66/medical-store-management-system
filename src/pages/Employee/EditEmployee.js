@@ -278,18 +278,18 @@ export default function EditEmployee({ row, bankList, closeModal, setSuccessOpen
                             </GridPlusIcon>
 
                             <GridInnerItem strong="true" item xs={2}>ID</GridInnerItem>
-                            <GridInnerItem strong="true" item xs={3}>Date</GridInnerItem>
-                            <GridInnerItem strong="true" item xs={3}>Amount</GridInnerItem>
-                            <GridInnerItem strong="true" item xs={3}>Add On</GridInnerItem>
+                            <GridInnerItem strong="true" item xs={4.5}>Date</GridInnerItem>
+                            <GridInnerItem strong="true" item xs={4.5}>Amount</GridInnerItem>
+                            {/*<GridInnerItem strong="true" item xs={3}>Add On</GridInnerItem>*/}
                             <GridInnerItem strong="true" item xs={1}>Action</GridInnerItem>
                             {salaryArray.map((each, index) => (
                                 <React.Fragment
                                     key={index}
                                 >
                                     <GridInnerItem item xs={2}>{index + 1}</GridInnerItem>
-                                    <GridInnerItem item xs={3}>{each.sal_joindate.split(' ')[0]}</GridInnerItem>
-                                    <GridInnerItem item xs={3}>{numberWithCommas(each.sal_amount)}</GridInnerItem>
-                                    <GridInnerItem item xs={3}>{each.sal_date}</GridInnerItem>
+                                    <GridInnerItem item xs={4.5}>{each.sal_joindate.split(' ')[0]}</GridInnerItem>
+                                    <GridInnerItem item xs={4.5}>{numberWithCommas(each.sal_amount)}</GridInnerItem>
+                                    {/*<GridInnerItem item xs={3}>{each.sal_date}</GridInnerItem>*/}
                                     <GridMinusIcon item xs={1}>
                                         <Tooltip title="Delete Salary">
                                             <IconButton onClick={() => handleDeleteSalary(index)}>

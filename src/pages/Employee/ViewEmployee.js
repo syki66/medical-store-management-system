@@ -54,19 +54,19 @@ export default function ViewEmployee({ row, setModalState, closeModal }) {
                             <GridInnerTitle item xs={12}>Employee Salary History</GridInnerTitle>
 
                             <GridInnerContainer container>
-                                <GridInnerItem strong="true" item xs={3}>ID</GridInnerItem>
-                                <GridInnerItem strong="true" item xs={3}>Date</GridInnerItem>
-                                <GridInnerItem strong="true" item xs={3}>Amount</GridInnerItem>
-                                <GridInnerItem strong="true" item xs={3}>Add On</GridInnerItem>
+                                <GridInnerItem strong="true" item xs={2}>ID</GridInnerItem>
+                                <GridInnerItem strong="true" item xs={5}>Date</GridInnerItem>
+                                <GridInnerItem strong="true" item xs={5}>Amount</GridInnerItem>
+                                {/*<GridInnerItem strong="true" item xs={3}>Add On</GridInnerItem>*/}
 
                                 {row.emp_salary.map((each, index) => (
                                     <React.Fragment
                                         key={each.sal_uid}
                                     >
-                                        <GridInnerItem item xs={3}>{index + 1}</GridInnerItem>
-                                        <GridInnerItem item xs={3}>{each.sal_joindate.split(' ')[0]}</GridInnerItem>
-                                        <GridInnerItem item xs={3}>{numberWithCommas(each.sal_amount)}</GridInnerItem>
-                                        <GridInnerItem item xs={3}>{each.sal_date}</GridInnerItem>
+                                        <GridInnerItem item xs={2}>{index + 1}</GridInnerItem>
+                                        <GridInnerItem item xs={5}>{each.sal_joindate.split(' ')[0]}</GridInnerItem>
+                                        <GridInnerItem item xs={5}>{numberWithCommas(each.sal_amount)}</GridInnerItem>
+                                        {/*<GridInnerItem item xs={3}>{each.sal_date}</GridInnerItem>*/}
                                     </React.Fragment>
                                 ))}
                             </GridInnerContainer>

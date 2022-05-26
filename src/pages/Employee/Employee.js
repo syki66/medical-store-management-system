@@ -156,7 +156,7 @@ export default function Employee() {
                                 <StyledCell>Joining Date</StyledCell>
                                 <StyledCell>Phone</StyledCell>
                                 <StyledCell>Address</StyledCell>
-                                <StyledCell>Added On</StyledCell>
+                                {/*<StyledCell>Added On</StyledCell>*/}
                                 <StyledCell>Action</StyledCell>
                             </TableRow>
                         </TableHead>
@@ -170,7 +170,7 @@ export default function Employee() {
                                     <StyledCell>{row.emp_joindate}</StyledCell>
                                     <StyledCell width='200px'>{row.emp_phone}</StyledCell>
                                     <StyledCell>{row.emp_address}</StyledCell>
-                                    <StyledCell width='150px'>{row.emp_added_on}</StyledCell>
+                                    {/*<StyledCell width='150px'>{row.emp_added_on}</StyledCell>*/}
                                     <StyledCell>
                                         <Button
                                             variant="contained"

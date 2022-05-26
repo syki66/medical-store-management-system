@@ -160,7 +160,7 @@ export default function Company() {
                                 <StyledCell>Contact No.</StyledCell>
                                 <StyledCell>Email</StyledCell>
                                 <StyledCell>Description</StyledCell>
-                                <StyledCell>Added On</StyledCell>
+                                {/*<StyledCell>Added On</StyledCell>*/}
                                 <StyledCell>Action</StyledCell>
                             </TableRow>
                         </TableHead>
@@ -176,7 +176,7 @@ export default function Company() {
                                     <StyledCell>{row.com_contact_no}</StyledCell>
                                     <StyledCell width='150px'>{row.com_email}</StyledCell>
                                     <StyledCell width='200px'>{row.com_description}</StyledCell>
-                                    <StyledCell>{row.com_joindate}</StyledCell>
+                                    {/*<StyledCell>{row.com_joindate}</StyledCell>*/}
                                     <StyledCell>
                                         <Button
                                             variant="contained"
