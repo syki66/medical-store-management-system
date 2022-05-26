@@ -1,4 +1,7 @@
 import React, {useEffect, useState, useRef, useCallback} from 'react';
+
+import { DETAIL_DEFINE } from '../../variables/constants'
+
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -19,15 +22,15 @@ export default function PrintBill({formRef, detailList, medList}) {
 
     function totalAdd(detailList) {
         return detailList.map((detailItem) => {
-            return detailItem.detail_amount * detailItem.price
-        }).reduce((acc, cur) => acc + cur)
+            return detailItem.detail_amount * detailItem.price;
+        }).reduce((acc, cur) => acc + cur);
     }
 
     const totalPrice = totalAdd(detailList);
 
-    useEffect(() => {
-        console.log('detailList', detailList)
-    },[])
+    // useEffect(() => {
+    //     console.log('detailList', detailList)
+    // },[])
 
     return(
         <>

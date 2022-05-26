@@ -1,23 +1,16 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, { useContext } from 'react';
 
-import {HomeContext} from "../../components/SideDrawer";
+import { HomeContext } from "../../components/SideDrawer";
 import ProfitChart from "./ProfitChart";
 import SellChart from "./SellChart";
 
 import styled from "styled-components";
-
 import { Paper } from '@mui/material';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 
-
-
 export default function Home() {
 
-    const { homeData } = useContext(HomeContext)
-
-    // useEffect(() => {
-    //     console.log('Home page homeData', homeData)
-    // }, [])
+    const { homeData } = useContext(HomeContext);
 
     return (
         <>

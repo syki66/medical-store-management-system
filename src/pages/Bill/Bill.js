@@ -4,19 +4,18 @@ import axios from 'axios';
 import DetailItem from "./DetailItem";
 import BillModal from "./BillModal";
 import { generateDate } from "../../utils/functions"
+import { baseURL } from '../../variables/baseURL'
+import { DETAIL_DEFINE } from '../../variables/constants'
 
 import styled from 'styled-components'
-
 import TextField from '@material-ui/core/TextField';
 import Button from '@mui/material/Button';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 
-import { baseURL } from '../../variables/baseURL'
-
-const path = "medicine?page=1"
-const URL = baseURL + path;
-
 export default function Bill() {
+    const path = "customer/bill"
+    const URL = baseURL + path;
+
     const [medList, setMedList] = useState([]);
     const [detailList, setDetailList] = useState([{
         id: 0,
@@ -47,10 +46,8 @@ export default function Bill() {
     const getMedList = async () => {
         try {
             const response = await axios.get(URL)
-            console.log('medicine response', response)
-
-            setMedList(response.data.medicine_list)
-            // console.log('medicine list response ', response.data.medicine_list)
+            // console.log('medicine response', response)
+            setMedList(response.data)
         } catch (error) {
             console.log(error)
         }
@@ -109,7 +106,7 @@ export default function Bill() {
         e.preventDefault();
         handleOpen();
 
-        console.log('submit url', baseURL + 'customer/bill')
+        // console.log('submit url', baseURL + 'customer/bill')
         try {
             const response = await axios.post(baseURL + 'customer/bill',
                 {
@@ -149,8 +146,6 @@ export default function Bill() {
     useEffect(() => {
         getMedList();
     }, []);
-
-    // ----------------------------------------------------------
 
     return (
         <>
@@ -282,8 +277,6 @@ const BillContainer = styled.div`
 
   .title {
     display: flex;
-    //align-items: center;
-
     margin: 0px;
     padding: 0px;
 
