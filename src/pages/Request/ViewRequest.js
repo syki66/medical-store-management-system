@@ -5,7 +5,6 @@ import {baseURL} from "../../variables/baseURL";
 
 import {IconButton, Button, Tooltip} from "@mui/material";
 import ClearIcon from '@mui/icons-material/Clear';
-
 import {
     CloseButton,
     StyledButton,
@@ -16,8 +15,6 @@ import {
     GridName,
     GridContent,
 } from '../../styles/Modal';
-
-import styled from 'styled-components'
 
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -37,7 +34,6 @@ export default function ViewRequest({ row, setModalState, closeModal, setSuccess
     const uid = row.req_uid
 
     const handleDelete = async (uid) => {
-        console.log("URL + uid" , URL + uid);
         try {
             const res = await axios.delete(URL + uid);
             if (res.request.status) {
@@ -54,9 +50,6 @@ export default function ViewRequest({ row, setModalState, closeModal, setSuccess
         }
     }
 
-    // useEffect(() => {
-    //     console.log(`${uid}출력`)
-    // }, [])
     return(
         <>
             <ModalContainer>

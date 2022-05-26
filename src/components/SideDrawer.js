@@ -51,14 +51,13 @@ export default function SideDrawer( {setLogin, errorMessage, setErrorOpen} ) {
     const timer = useRef(sessionTime - 1);
     const [clock, setClock] = useState('30:00');
 
-    const path = "user"
+    const path = "user";
     const URL = baseURL + path;
 
     const getData = async () => {
         try {
             const response = await axios.get(URL);
             setHomeData(response.data);
-            console.log('sidedrawer-response', response);
             setUserName(response.data.user_storename)
         } catch (error) {
             const { status, data } = error.response;
@@ -76,7 +75,7 @@ export default function SideDrawer( {setLogin, errorMessage, setErrorOpen} ) {
     const location = useLocation()
 
     const goToHome = () => {
-        navigate('/')
+        navigate('/');
     };
 
     const theme = useTheme();
@@ -140,7 +139,6 @@ export default function SideDrawer( {setLogin, errorMessage, setErrorOpen} ) {
 
     useEffect(() => {
         getData();
-        console.log('sidedrawer-homeData', homeData);
 
         clearTimer();
         runTimer();

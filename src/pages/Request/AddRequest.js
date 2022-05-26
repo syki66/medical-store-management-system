@@ -1,16 +1,4 @@
 import React, { useState } from 'react';
-import {
-    IconButton,
-    TextField,
-    Tooltip,
-    Button,
-    Select,
-    FormControl,
-    InputLabel,
-    MenuItem,
-} from "@mui/material";
-
-import ClearIcon from "@mui/icons-material/Clear";
 import axios from "axios";
 
 import {
@@ -18,7 +6,6 @@ import {
     StyledButton,
     ModalContainer,
     GridContainer,
-    GridDescription,
     GridInnerTitle,
     GridName,
     GridContent,
@@ -26,6 +13,14 @@ import {
 
 import { baseURL } from '../../variables/baseURL';
 import { generateDate } from '../../utils/functions'
+
+import {
+    IconButton,
+    TextField,
+    Tooltip,
+    Button,
+} from "@mui/material";
+import ClearIcon from "@mui/icons-material/Clear";
 
 const path = "customer/req"
 const URL = baseURL + path;

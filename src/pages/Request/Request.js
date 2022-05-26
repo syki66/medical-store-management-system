@@ -17,7 +17,6 @@ import TableRow from "@mui/material/TableRow";
 import TableBody from "@mui/material/TableBody";
 import TableContainer from "@mui/material/TableContainer";
 import Checkbox from '@mui/material/Checkbox';
-
 import Stack from "@mui/material/Stack";
 import {Modal, Snackbar, Alert} from "@mui/material";
 
@@ -44,8 +43,7 @@ export default function Request() {
     const getData = async (URL, page) => {
         try{
             const response = await axios.get(URL + page);
-            console.log('request response', response);
-
+            // console.log('request response', response);
             const resData = response.data;
 
             setRows(resData.request_list);
@@ -135,12 +133,6 @@ export default function Request() {
             maxPage,
         ]
     );
-
-    // useEffect(() => {
-    //     getData()
-    //     console.log('rows.length2', rows && rows.length)
-    //
-    // },[])
 
     return (
         <>
@@ -234,7 +226,6 @@ export default function Request() {
     </>
     )
 }
-
 
 const InnerContainer = styled.div`
   background-color: #d9d9d9;

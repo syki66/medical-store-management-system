@@ -18,15 +18,13 @@ const path = "user/"
 const URL = baseURL + path;
 
 export default function MyPage() {
-    const {homeData} = useContext(HomeContext)
+    const {homeData} = useContext(HomeContext);
     const userUid = homeData && homeData.user_uid;
 
     const [userSName, setUserSName] = useState('');
 
     const [successOpen, setSuccessOpen] = useState(false);
     const [errorOpen, setErrorOpen] = useState(false);
-
-    const [showPass, setShowPass] = useState(false);
 
     const schema = yup
         .object()
@@ -77,7 +75,7 @@ export default function MyPage() {
                 })
 
                 if (response) {
-                    console.log('정보변경 성공 response', response)
+                    console.log('정보변경 성공 response', response);
                     setSuccessOpen(true);
                     setUserSName(data.user_storename);
 
@@ -87,10 +85,10 @@ export default function MyPage() {
                 }
 
             } catch (error) {
-                console.log(error)
+                console.log(error);
             }
         } else {
-            await console.log('실패')
+            await console.log('실패');
         }
     })
 

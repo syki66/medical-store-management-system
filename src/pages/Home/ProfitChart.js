@@ -1,5 +1,5 @@
-import React, {useContext} from "react";
-import {HomeContext} from "../../components/SideDrawer";
+import React, { useContext } from "react";
+import { HomeContext } from "../../components/SideDrawer";
 
 import styled from "styled-components";
 import {
@@ -12,7 +12,7 @@ import {
 } from "recharts";
 
 export default function ProfitChart() {
-    const { homeData } = useContext(HomeContext)
+    const { homeData } = useContext(HomeContext);
 
     return (
         <ProfitChartDiv>
