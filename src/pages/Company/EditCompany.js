@@ -40,7 +40,6 @@ export default function EditCompany({ row, bankList, closeModal, setSuccessOpen,
         "com_account_no": row.com_account_no,
         "bank_uid": row.bank_name,
     });
-    const [bankName, setBankName] = useState('')
 
     const [confirmOpen, setConfirmOpen] = useState(false);
 
@@ -49,17 +48,8 @@ export default function EditCompany({ row, bankList, closeModal, setSuccessOpen,
         setSelect(value);
         setInputs({
             ...inputs,
-            [name]: value + 1
+            [name]: Object.values(bankList[value])[0]
         });
-        // console.log(name, value);
-        if ('bank_uid' == name) {
-            setInputs({
-                ...inputs,
-                [name]: Object.values(bankList[value])[0]
-            });
-
-            // console.log(Object.values(bankList[value])[0]);
-        }
     };
 
     const handleChange = (event) => {

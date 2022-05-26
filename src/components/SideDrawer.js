@@ -40,7 +40,7 @@ export const HomeContext = React.createContext(null);
 
 const sessionTime = 1800;
 
-export default function SideDrawer( {setLogin, errorMessage, setErrorOpen} ) {
+export default function SideDrawer( {setLogin} ) {
     const [auth, setAuth] = React.useState(true);
     const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -109,8 +109,7 @@ export default function SideDrawer( {setLogin, errorMessage, setErrorOpen} ) {
                 sessionStorage.setItem('login', false);
                 setLogin(false);
                 if (forced){
-                    errorMessage.current = "세션이 만료되어 자동 로그아웃 되었습니다.";
-                    setErrorOpen(true);
+                    alert("세션이 만료되어 자동 로그아웃 되었습니다.");
                 }
             }
         } catch (error){

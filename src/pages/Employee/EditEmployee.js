@@ -57,9 +57,7 @@ export default function EditEmployee({ row, bankList, closeModal, setSuccessOpen
     const handleSelect = (event) => {
         const { name, value } = event.target
         setSelect(value);
-        if ('bank_uid' == name) {
-            inputs.current[name] = Object.values(bankList[value])[0];
-        }
+        inputs.current[name] = Object.values(bankList[value])[0];
     };
 
     const handleChange = (event) => {

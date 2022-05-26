@@ -45,14 +45,8 @@ export default function AddEmployee({ bankList, closeModal, setSuccessOpen, setE
         setSelect(value);
         setInputs({
             ...inputs,
-            [name]: value + 1
+            [name]: Object.values(bankList[value])[0]
         });
-        if ('bank_uid' == name) {
-            setInputs({
-                ...inputs,
-                [name]: Object.values(bankList[value])[0]
-            });
-        }
     };
 
     const handleChange = (event) => {
