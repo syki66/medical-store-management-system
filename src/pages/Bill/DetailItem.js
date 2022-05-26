@@ -1,21 +1,15 @@
-import React, { useState, useCallback, useEffect, useRef } from 'react';
+import React, { useState, useCallback } from 'react';
+
+import { DETAIL_DEFINE } from '../../variables/constants'
+
 import TextField from "@material-ui/core/TextField";
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import Box from '@mui/material/Box';
 
-const DETAIL_DEFINE = {
-    SR_NO:"sr_no",
-    MED_UID:"med_uid",
-    QTY:"qty",
-    QTY_TYPE:"qty_type",
-    PRICE:'price',
-    AMOUNT:'detail_amount'
-};
-
 export default function DetailItem(props) {
     const {medList, detailItem, idx, onChange, onDelete } = props;
 
-    const [select, setSelect] = useState();
+    const [select] = useState();
 
     const handleChange = useCallback((e) => {
         onChange(idx, e.target.name, e.target.value);
@@ -24,7 +18,6 @@ export default function DetailItem(props) {
     const handleDelete = useCallback(() => {
         onDelete(idx);
     }, [onDelete]);
-
 
     return(
         <>
@@ -48,9 +41,7 @@ export default function DetailItem(props) {
                     noValidate
                     autoComplete="off"
                 >
-
-                    {props.medList &&
-                        <TextField
+                    <TextField
                         required
                         select
                         label="Medicine Name"
@@ -62,16 +53,15 @@ export default function DetailItem(props) {
                         defaultValue=""
                         value={select}
                     >
-                        {props.medList && props.medList.map((medicine, idx) => (
-                            <option key={idx} value={medicine.med_uid}>
-                                {medicine.med_name}
-                            </option>
-                        ))}
-                    </TextField>}
-
-
-
-
+                        {props.medList &&
+                            props.medList
+                                .map((medicine, idx) => (
+                                    <option key={idx} value={medicine.med_uid}>
+                                        {medicine.med_name}
+                                    </option>
+                                ))
+                        }
+                    </TextField>
                 </Box>
                 <TextField
                     required
