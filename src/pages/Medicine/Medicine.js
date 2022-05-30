@@ -154,7 +154,7 @@ export default function Medicine() {
                             <TableRow>
                                 <StyledCell>No.</StyledCell>
                                 <StyledCell>Name</StyledCell>
-                                <StyledCell>Medical Type</StyledCell>
+                                <StyledCell>Medicine Type</StyledCell>
                                 <StyledCell>Buy Price</StyledCell>
                                 <StyledCell>Sell Price</StyledCell>
                                 <StyledCell>Expire Date</StyledCell>
