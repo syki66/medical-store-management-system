@@ -131,6 +131,7 @@ export default function Request() {
         }, [
             successOpen,
             maxPage,
+            currPage
         ]
     );
 
@@ -153,7 +154,7 @@ export default function Request() {
             <Table sx={{width:'100%'}}>
                 <TableHead>
                     <TableRow>
-                        <StyledCell>Id</StyledCell>
+                        <StyledCell>No</StyledCell>
                         <StyledCell>Name</StyledCell>
                         <StyledCell>Phone</StyledCell>
                         <StyledCell>Medicine Details</StyledCell>
