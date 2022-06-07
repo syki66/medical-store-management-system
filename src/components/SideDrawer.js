@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useContext, useRef } from 'react';
+import React, {useEffect, useState, useContext, useRef, useCallback} from 'react';
 
 import {Link, Route, Routes, useLocation} from "react-router-dom";
 import {useNavigate} from "react-router";
@@ -54,11 +54,12 @@ export default function SideDrawer( {setLogin} ) {
     const path = "user";
     const URL = baseURL + path;
 
-    const getData = async () => {
+    const getData = useCallback(async () => {
         try {
             const response = await axios.get(URL);
+            // console.log('home getData response', response.data);
             setHomeData(response.data);
-            setUserName(response.data.user_storename)
+            setUserName(response.data.user_storename);
         } catch (error) {
             const { status, data } = error.response;
             if (status === 403 && data.message === "session ID not found") {
@@ -69,7 +70,7 @@ export default function SideDrawer( {setLogin} ) {
                 console.log(error);
             }
         }
-    };
+    }, []);
 
     const navigate = useNavigate();
     const location = useLocation()
@@ -111,8 +112,14 @@ export default function SideDrawer( {setLogin} ) {
                     alert("세션이 만료되어 자동 로그아웃 되었습니다.");
                 }
             }
-        } catch (error){
-            console.log(error);
+        } catch (error) {
+            const { status, statusText } = error.response;
+            if (status === 401 && statusText === "Unauthorized") {
+                sessionStorage.setItem('login', false);
+                setLogin(false);
+            } else {
+                console.log(error)
+            }
         }
     }
 
