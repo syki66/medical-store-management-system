@@ -22,8 +22,11 @@ const GlobalStyle = createGlobalStyle`
   .css-1xffca4 {
     padding: 0px;
   }
+
+  // Bill page
+  #mui-component-select-med_uid {
+    padding: 6px 0px 10px;
+  }
 `
-
-
 
 export default GlobalStyle

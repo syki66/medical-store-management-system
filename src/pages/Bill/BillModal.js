@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 import PrintBill from "./PrintBill";
 import Modal from "@mui/material/Modal";
 
-const BillModal = ({ medList, formRef, detailList, open, handleClose }) => {
+const BillModal = ({ customerBill, customerInfoRef, detailList, open, handleClose }) => {
 
     return (
         <Modal
@@ -14,9 +14,9 @@ const BillModal = ({ medList, formRef, detailList, open, handleClose }) => {
         >
             <Box sx={style}>
                 <PrintBill
-                    formRef={formRef}
+                    customerInfoRef={customerInfoRef}
                     detailList={detailList}
-                    medList={medList}
+                    customerBill={customerBill}
                 />
             </Box>
         </Modal>

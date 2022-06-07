@@ -16,14 +16,12 @@ export default function Bill() {
     const path = "customer/bill"
     const URL = baseURL + path;
 
-    const [medList, setMedList] = useState([]);
+    const [customerBill, setCustomerBill] = useState([]);
     const [detailList, setDetailList] = useState([{
         id: 0,
         sr_no : '',
         med_uid: '',
-        qty : '',
-        qty_type : '',
-        price : '',
+        med_sellprice : '',
         detail_amount : ''
     }
     ]);
@@ -37,17 +35,18 @@ export default function Bill() {
     const nameRef = useRef();
     const addressRef = useRef();
     const phoneRef = useRef();
-    const formRef = useRef({
+    const customerInfoRef = useRef({
         name: nameRef,
         address: addressRef,
         phone: phoneRef,
     });
 
-    const getMedList = async () => {
+    const getCustomerRequest = async () => {
         try {
             const response = await axios.get(URL)
             // console.log('medicine response', response)
-            setMedList(response.data)
+            setCustomerBill(response.data)
+
         } catch (error) {
             console.log(error)
         }
@@ -60,9 +59,7 @@ export default function Bill() {
             id: detailList.length,
             sr_no : '',
             med_uid : '',
-            qty : '',
-            qty_type : '',
-            price : '',
+            med_sellprice : '',
             detail_amount : ''
         };
 
@@ -73,31 +70,27 @@ export default function Bill() {
 
     // Delete medicine detail
     const handleDelete = useCallback((idx) => {
-        // console.log('복사 전 ', detailList);
         let _detailList = [...detailList];
-        // console.log('복사해온 detilaList', _detailList)
-
         _detailList.splice(idx, 1);
 
         setDetailList(_detailList);
     },[detailList]);
 
     // Handle customer info
-    const handleChangeForm = (e) => {
+    const handleCustomerInfo = (e) => {
         const { name, value } = e.target;
 
-        formRef.current[name] = value;
-        // console.log('formRef', formRef)
+        customerInfoRef.current[name] = value;
+        // console.log('customerInfoRef', customerInfoRef)
     }
 
     // Handle medicine detail
     const handleChange = useCallback((idx, key, value) => {
-        // console.log('복사 전 ', detailList);
         let _detailList = [...detailList];
-        // console.log('복사해온 detilaList', _detailList)
         _detailList[idx][key] = value;
 
         setDetailList(_detailList);
+
     },[detailList]);
 
 
@@ -137,15 +130,18 @@ export default function Bill() {
                     detailItem={detailItem}
                     onChange={handleChange}
                     onDelete={handleDelete}
-                    medList={medList}
+                    customerBill={customerBill}
+                    detailList={detailList}
+                    setDetailList={setDetailList}
                 />
             );
         })
-    }, [detailList, handleChange, handleDelete, medList]);
+    }, [detailList, handleChange, handleDelete, customerBill]);
 
     useEffect(() => {
-        getMedList();
+        getCustomerRequest();
     }, []);
+
 
     return (
         <>
@@ -163,7 +159,7 @@ export default function Bill() {
                                         type={'text'}
                                         inputRef={nameRef}
                                         name={'name'}
-                                        onChange={handleChangeForm}
+                                        onChange={handleCustomerInfo}
                                         type={'text'}
                                         label="Customer Name"
                                         className='textField'
@@ -173,7 +169,7 @@ export default function Bill() {
                                     <TextField
                                         required
                                         inputRef={phoneRef}
-                                        onChange={handleChangeForm}
+                                        onChange={handleCustomerInfo}
                                         label="Phone"
                                         name={'phone'}
                                         className='textField'
@@ -185,7 +181,7 @@ export default function Bill() {
                                     <TextField
                                         required
                                         inputRef={addressRef}
-                                        onChange={handleChangeForm}
+                                        onChange={handleCustomerInfo}
                                         label="Address"
                                         name={'address'}
                                         className='textField'
@@ -215,9 +211,9 @@ export default function Bill() {
                             <BillModal
                                 open={open}
                                 handleClose={handleClose}
-                                medList={medList}
+                                customerBill={customerBill}
                                 detailList={detailList}
-                                formRef={formRef.current}
+                                customerInfoRef={customerInfoRef.current}
                             />
                         </div>
                     </BillContainer>

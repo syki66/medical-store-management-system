@@ -1,23 +1,44 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 
 import { DETAIL_DEFINE } from '../../variables/constants'
 
 import TextField from "@material-ui/core/TextField";
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
-import Box from '@mui/material/Box';
+import {FormControl, InputLabel, MenuItem, Select} from "@mui/material";
 
 export default function DetailItem(props) {
-    const {medList, detailItem, idx, onChange, onDelete } = props;
+    const { customerBill, detailList, detailItem, idx, onChange, onDelete } = props;
 
     const [select] = useState();
 
+    const [medUid, setMedUid] = useState(null);
+
     const handleChange = useCallback((e) => {
-        onChange(idx, e.target.name, e.target.value);
+        if(e.target.name == DETAIL_DEFINE.MED_UID) {
+            setMedUid(e.target.value);
+            onChange(idx, e.target.name, e.target.value);
+        } else {
+            onChange(idx, e.target.name, e.target.value);
+        }
     }, [onChange]);
 
     const handleDelete = useCallback(() => {
         onDelete(idx);
     }, [onDelete]);
+
+    useEffect(() => {
+        customerBill && customerBill.map((bill, idx) => {
+            detailList && detailList.map((detailItem, idx) => {
+                if(bill.med_uid == detailItem.med_uid) {
+                    onChange(idx, detailItem.med_sellprice, bill.med_sellprice);
+                }
+            })
+        })
+    }, [medUid])
+
+    useEffect(() => {
+        console.log('detailItem', detailItem)
+    }, [detailItem])
 
     return(
         <>
@@ -33,66 +54,55 @@ export default function DetailItem(props) {
                     value={detailItem.sr_no}
                     style={{marginRight: 1 + 'em'}}
                 />
-                <Box
-                    component="form"
-                    sx={{
-                        '& .MuiTextField-root': {  width: '25ch' },
-                    }}
-                    noValidate
-                    autoComplete="off"
-                >
-                    <TextField
-                        required
-                        select
-                        label="Medicine Name"
-                        name={DETAIL_DEFINE.MED_UID}
-                        onChange={(e) => handleChange(e)}
-                        margin="normal"
-                        margin-right='3px'
-                        style={{marginRight: 1 + 'em'}}
-                        defaultValue=""
-                        value={select}
-                    >
-                        {props.medList &&
-                            props.medList
-                                .map((medicine, idx) => (
-                                    <option key={idx} value={medicine.med_uid}>
-                                        {medicine.med_name}
-                                    </option>
-                                ))
-                        }
-                    </TextField>
-                </Box>
+                <FormControl fullWidth variant="standard" sx={{ m: 1, minWidth: 100 }}>
+                    <InputLabel>Medicine Name*</InputLabel>
+                        <Select
+                            required
+                            name={DETAIL_DEFINE.MED_UID}
+                            label="Medicine Name*"
+                            onChange={(e) => handleChange(e)}
+                            defaultValue=""
+                            value={select}
+                            margin="normal"
+                            style={{marginRight: 1 + 'em', padding: 0 + 'em'}}
+                            margin-right='3px'
+                            padding='0px'
+                        >
+                            {
+                                props.customerBill &&
+                                props.customerBill
+                                    .map((medicine, idx) => (
+                                        <MenuItem key={idx} value={medicine.med_uid}>
+                                            {medicine.med_name}
+                                        </MenuItem>
+                                    ))
+                            }
+                        </Select>
+                </FormControl>
                 <TextField
                     required
-                    label="Qty"
-                    name={DETAIL_DEFINE.QTY}
-                    onChange={(e) => handleChange(e)}
-                    className='textField'
-                    margin="normal"
-                    value={detailItem.qty}
-                    style={{marginRight: 1 + 'em'}}
-                />
-                <TextField
-                    required
-                    label="Qty Type"
-                    name={DETAIL_DEFINE.QTY_TYPE}
-                    onChange={(e) => handleChange(e)}
-                    className='textField'
-                    margin="normal"
-                    value={detailItem.qty_type}
-                    style={{marginRight: 1 + 'em'}}
-                />
-                <TextField
-                    required
-                    label="Unit Price"
+                    label="Price"
                     name={DETAIL_DEFINE.PRICE}
                     onChange={(e) => handleChange(e)}
                     className='textField'
                     margin="normal"
-                    value={detailItem.price}
                     style={{marginRight: 1 + 'em'}}
-                />
+                    InputProps={{
+                        readOnly: true,
+                    }}
+                    value =
+                        {
+                            medUid &&
+                                props.customerBill &&
+                                props.customerBill
+                                    .filter((bill) => bill.med_uid == medUid)
+                                    .map((bill) => bill.med_sellprice
+                                ).toLocaleString('ko-KR')
+                            ||
+                            ''
+                        }
+                >
+                </TextField>
                 <TextField
                     required
                     label={"Amount"}

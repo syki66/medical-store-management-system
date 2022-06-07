@@ -29,10 +29,6 @@ export default function MyPage() {
     const schema = yup
         .object()
         .shape({
-            user_email: yup
-                .string()
-                .email('이메일 형식으로 입력해주세요')
-                .required('이메일을 입력해주세요'),
             user_storename: yup
                 .string()
                 .required('스토어 이름을 입력해주세요'),
@@ -69,7 +65,7 @@ export default function MyPage() {
         if(data.user_pw == data.user_confirm) {
             try {
                 const response = await axios.patch(`${URL}${userUid}/`, {
-                    "user_email" : data.user_email,
+                    "user_email" : homeData.user_email,
                     "user_storename" : data.user_storename,
                     "user_pw" : data.user_pw,
                 })
@@ -128,18 +124,21 @@ export default function MyPage() {
                                                     render={({field}) =>
                                                         <TextField
                                                             required
-                                                            // label="Email Account"
                                                             {...field}
                                                             {...register('user_email')}
                                                             placeholder={homeData.user_email}
                                                             sx={{width: '100%'}}
+                                                            autocomplete="false"
+                                                            defaultValue={homeData.user_email}
+                                                            InputProps={{
+                                                                readOnly: true,
+                                                            }}
                                                         />
                                                     }
                                                 />
                                                 <ErrorMessage>{errors.user_email?.message}</ErrorMessage>
                                             </GridText>
                                         </GridInput>
-
                                         <GridInput>
                                             <GridItem container spacing={1} item xs={5}>
                                                 Store Name*
@@ -151,11 +150,13 @@ export default function MyPage() {
                                                     render={({field}) =>
                                                         <TextField
                                                             required
-                                                            // label="Store Name"
+                                                            label="Store Name"
                                                             {...field}
                                                             {...register('user_storename')}
                                                             placeholder={homeData.user_storename}
                                                             sx={{width: '100%'}}
+                                                            autocomplete="false"
+                                                            defaultValue={homeData.user_storename}
                                                         />
                                                     }
                                                 />
