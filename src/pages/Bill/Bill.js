@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useRef, useCallback} from 'react';
+import React, {useEffect, useState, useRef, useCallback, useContext} from 'react';
 import axios from 'axios';
 
 import DetailItem from "./DetailItem";
@@ -97,9 +97,9 @@ export default function Bill() {
     // Generate bill (post bill request)
     const handleSubmit = async(e) => {
         e.preventDefault();
+        // console.log('submit url', baseURL + 'customer/bill')
         handleOpen();
 
-        // console.log('submit url', baseURL + 'customer/bill')
         try {
             const response = await axios.post(baseURL + 'customer/bill',
                 {
@@ -114,7 +114,7 @@ export default function Bill() {
                         }),
                     }
              )
-            console.log('성공response', response)
+            console.log('성공response', response);
         } catch (error) {
             console.log(error)
         }
@@ -141,7 +141,6 @@ export default function Bill() {
     useEffect(() => {
         getCustomerRequest();
     }, []);
-
 
     return (
         <>

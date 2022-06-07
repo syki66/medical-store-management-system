@@ -36,10 +36,6 @@ export default function DetailItem(props) {
         })
     }, [medUid])
 
-    useEffect(() => {
-        console.log('detailItem', detailItem)
-    }, [detailItem])
-
     return(
         <>
             <li className={'detailCon'} key={detailItem.id} >
