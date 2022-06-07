@@ -1,6 +1,4 @@
-import React, {useEffect, useState, useRef, useCallback} from 'react';
-
-import { DETAIL_DEFINE } from '../../variables/constants'
+import React, { useRef } from 'react';
 
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -14,32 +12,30 @@ import styled from 'styled-components';
 
 import {useReactToPrint} from 'react-to-print';
 
-export default function PrintBill({formRef, detailList, medList}) {
+export default function PrintBill({customerInfoRef, detailList, customerBill}) {
     const componentRef = useRef();
     const handlePrint = useReactToPrint({
         content: () => componentRef.current,
     });
 
-    function totalAdd(detailList) {
-        return detailList.map((detailItem) => {
-            return detailItem.detail_amount * detailItem.price;
-        }).reduce((acc, cur) => acc + cur);
+    const getTotalPrice = (detailList) => {
+        return customerBill && customerBill.map((bill) => {
+            return detailList && detailList.filter((detailItem) => bill.med_uid == detailItem.med_uid)
+                .map((detailItem) => bill.med_sellprice * detailItem.detail_amount )
+                .reduce((acc, cur) => acc + cur, 0);
+        })
+        .reduce((acc, cur) => acc + cur, 0);
     }
 
-    const totalPrice = totalAdd(detailList);
-
-    // useEffect(() => {
-    //     console.log('detailList', detailList)
-    // },[])
+    const totalPrice = getTotalPrice(detailList);
 
     return(
         <>
             <TableContainer component={Paper}>
-
-                <Table
+                    <Table
                     ref={componentRef}
                     className={'TableDiv'}
-                    sx={{ minWidth: 700 }}
+                    sx={{minWidth: 700}}
                     aria-label="spanning table"
                 >
                     <TableHead>
@@ -53,53 +49,62 @@ export default function PrintBill({formRef, detailList, medList}) {
                                 Name :
                             </TableCell>
                             <TableCell align="left">
-                                {formRef.name}
+                                {customerInfoRef.name}
                             </TableCell>
                             <TableCell sx={{fontWeight: 'bold'}}>
                                 Address :
                             </TableCell>
-                            <TableCell>
-                                {formRef.address}
+                            <TableCell align="left">
+                                {customerInfoRef.address}
                             </TableCell>
                             <TableCell sx={{fontWeight: 'bold'}}>
                                 Phone :
                             </TableCell>
-                            <TableCell>
-                                {formRef.phone}
+                            <TableCell align="left">
+                                {customerInfoRef.phone}
                             </TableCell>
-
                         </TableRow>
 
                         <TableRow>
-                            <TableCell sx={{fontWeight: 'bold'}}>SR No.</TableCell>
-                            <TableCell sx={{fontWeight: 'bold'}}>Medicine Name.</TableCell>
-                            <TableCell sx={{fontWeight: 'bold'}}>Qty.</TableCell>
-                            <TableCell sx={{fontWeight: 'bold'}}>Qty Type.</TableCell>
-                            <TableCell sx={{fontWeight: 'bold'}}>Unit Price.</TableCell>
-                            <TableCell sx={{fontWeight: 'bold'}}>Amount.</TableCell>
+                            <TableCell sx={{fontWeight: 'bold'}} colSpan={1}>SR No.</TableCell>
+                            <TableCell sx={{fontWeight: 'bold'}} colSpan={2}>Medicine Name.</TableCell>
+                            <TableCell sx={{fontWeight: 'bold'}} colSpan={2}>Price.</TableCell>
+                            <TableCell sx={{fontWeight: 'bold'}} colSpan={1}>Amount.</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
                         {detailList.map((detailItem, idx) => (
                             <TableRow key={detailItem.med_uid}>
-                                <TableCell align="left">{detailItem.sr_no}</TableCell>
-                                {
-                                    medList.map((medItem, idx) => {
-                                        if(medItem.med_uid == detailItem.med_uid) {
-                                            return <TableCell align="left" key={medItem.med_uid}>{medItem.med_name}</TableCell>
-                                        }
-                                    })
-                                }
-                                <TableCell align="left">{detailItem.qty}</TableCell>
-                                <TableCell align="left">{detailItem.qty_type}</TableCell>
-                                <TableCell align="left">{detailItem.price}</TableCell>
-                                <TableCell align="left">{detailItem.detail_amount}</TableCell>
+                                <TableCell align="left" colSpan={1}>{detailItem.sr_no}</TableCell>
+                                <TableCell align="left" colSpan={2}>
+                                    {
+                                        customerBill &&
+                                        customerBill.map((medItem) => {
+                                            if (medItem.med_uid == detailItem.med_uid) {
+                                                return <TableCell align="left"
+                                                                  key={medItem.med_uid}>{medItem.med_name}</TableCell>
+                                            }
+                                        })
+                                    }
+                                </TableCell>
+                                <TableCell align="left" colSpan={2}>
+                                    {
+                                        customerBill &&
+                                        customerBill.map((bill) => {
+                                            if (bill.med_uid == detailItem.med_uid) {
+                                                return <TableCell align="left"
+                                                                  key={bill.med_uid}>{bill.med_sellprice.toLocaleString('ko-KR')}</TableCell>
+                                            }
+                                        })
+                                    }
+                                </TableCell>
+                                <TableCell align="left" colSpan={1}>{detailItem.detail_amount}</TableCell>
                             </TableRow>
                         ))}
-                        <TableRow>
-                            <TableCell sx={{fontWeight: 'bold'}} colSpan={4} align="right">Total</TableCell>
-                            <TableCell colSpan={2} align="center">{(totalPrice)}</TableCell>
-                        </TableRow>
+                            <TableRow>
+                                <TableCell sx={{fontWeight: 'bold'}} colSpan={3} align="right">Total</TableCell>
+                                <TableCell colSpan={3} align="center">{totalPrice.toLocaleString('ko-KR')}</TableCell>
+                            </TableRow>
                     </TableBody>
                 </Table>
             </TableContainer>
